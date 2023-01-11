@@ -1,0 +1,21 @@
+.DS_Store
+./tools/backtest/node_modules/
+./tools/backtest/dist/
+
+# local env files
+./tools/backtest/.env.local
+./tools/backtest/.env.*.local
+
+# Log files
+./tools/backtest/npm-debug.log*
+./tools/backtest/yarn-debug.log*
+./tools/backtest/yarn-error.log*
+
+# Editor directories and files
+.idea
+./tools/backtest/.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
