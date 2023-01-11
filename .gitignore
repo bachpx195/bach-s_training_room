@@ -1,19 +1,19 @@
 .DS_Store
-./tools/backtest/node_modules/
-./tools/backtest/dist/
+node_modules/
+dist/
 
 # local env files
-./tools/backtest/.env.local
-./tools/backtest/.env.*.local
+.env.local
+.env.*.local
 
 # Log files
-./tools/backtest/npm-debug.log*
-./tools/backtest/yarn-debug.log*
-./tools/backtest/yarn-error.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Editor directories and files
 .idea
-./tools/backtest/.vscode
+.vscode
 *.suo
 *.ntvs*
 *.njsproj
