@@ -29,7 +29,15 @@ module.exports = (env, options) => ({
             {
                 test: /script_ww\.js$/,
                 loader: 'worker-loader'
-            }
+            },
+            {
+                test: /\.(png|jpg|gif)$/i,
+                use: [
+                {
+                    loader: 'url-loader',
+                },
+                ],
+            },
         ]
     },
     plugins: [

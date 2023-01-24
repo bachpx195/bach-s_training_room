@@ -95,3 +95,8 @@ export function getCandleStickData (context, payload) {
   }
   return apiGet(context, `${endpoint}/${buildQueryString(params)}`)
 }
+
+export function getMerchandisekData (context) {
+  const endpoint = 'merchandise_rates'
+  return apiGet(context, endpoint)
+}
