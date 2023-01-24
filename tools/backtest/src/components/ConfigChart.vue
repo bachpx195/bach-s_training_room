@@ -6,7 +6,7 @@
         <p class="config-title">Backtest Tool ver1</p>
         <div class="config-select">
             <label for="select-coin">Select coin</label>
-            <select name="select-coin" class="form-control">
+            <select v-model="merchandiseSelected" name="select-coin" class="form-control" @change="changeMerchandise">
                 <option v-for="mr in this.merchandiseList" :value="mr.id" :key="mr.id">
                     {{ mr.slug }}
                 </option>
@@ -24,9 +24,13 @@ export default {
     components: {},
     mixins: [],
     props: {
-        merchandiseList: {
-            type: Object,
-            default: function () { return {} }
+        list: {
+            type: Array,
+            default: function () { return [] }
+        },
+        selected: {
+            type: Number,
+            default: 34
         },
         width: {
             type: Number,
@@ -39,14 +43,19 @@ export default {
     },
     data() {
         return {
-            merchandiseList: this.$props.merchandiseList,
-            merchandiseSeleted: null,
+            merchandiseList: this.$props.list,
+            merchandiseSelected: this.$props.selected,
             logo
         }
     },
     computed: {
         style() {
             return 'width: ' + this.$props.width + 'px; height: ' + this.$props.height + 'px'
+        }
+    },
+    methods: {
+        changeMerchandise () {
+            this.$emit('select-merchandise', this.merchandiseSelected)
         }
     }
 }

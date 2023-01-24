@@ -1,7 +1,7 @@
 <template>
-    <div v-if="dataReady1 && dataReady2 && dataReady3">
+    <div v-if="dataReady1 && dataReady2 && dataReady3 && dataReady4">
         <trading-vue :data="this.chartData(1)"
-            title-txt='BTCUSDT 1H'
+            :title-txt="this.title('1H')"
             :width="this.width/2"
             :height="this.height/2"
             :color-back="colors.colorBack"
@@ -10,7 +10,7 @@
             id="main-trading-vue">
         </trading-vue>
         <trading-vue :data="this.chartData(2)"
-            title-txt='BTCUSDT 1D'
+            :title-txt="this.title('1D')"
             :width="this.width/2"
             :height="this.height/2"
             :color-back="colors.colorBack"
@@ -19,7 +19,7 @@
             id="btc-trading-vue">
         </trading-vue>
         <trading-vue :data="this.chartData(3)"
-            title-txt='BTCUSDT 15m'
+            :title-txt="this.title('15m')"
             :width="this.width/2"
             :height="this.height/2"
             :color-back="colors.colorBack"
@@ -30,7 +30,9 @@
         <config-chart
             :width="this.width/2"
             :height="this.height/2"
-            :merchandise-list="this.merchandiseList"
+            :list="this.merchandiseList"
+            :selected="this.merchandiseSelected"
+            @select-merchandise="onSelectMerchandise"
         >
         </config-chart>
     </div>
@@ -40,6 +42,8 @@
 import TradingVue from './TradingVue.vue'
 import ConfigChart from './components/ConfigChart.vue'
 import DataCube from '../src/helpers/datacube.js'
+import bus from './stuff/bus.js'
+import _ from "lodash"
 
 export default {
     name: 'app',
@@ -49,39 +53,40 @@ export default {
     created() {
         this.$store.dispatch('getMerchandisekData').then(res4 => {
             this.merchandiseList = res4.data
-        })
-
-        const params1 = {
-            merchandise_rate_id: 34,
-            time_type: 4
-        }
-        this.$store.dispatch('getCandleStickData', params1).then(res1 => {
-            this.chart1 = res1.data.ohlcv
-            this.dataReady1 = true;
-        })
-        const params2 = {
-            merchandise_rate_id: 34,
-            time_type: 1
-        }
-        this.$store.dispatch('getCandleStickData', params2).then(res2 => {
-            this.chart2 = res2.data.ohlcv
-            this.dataReady2 = true;
-        })
-
-        const params3 = {
-            merchandise_rate_id: 34,
-            time_type: 5
-        }
-        this.$store.dispatch('getCandleStickData', params3).then(res3 => {
-            this.chart3 = res3.data.ohlcv
-            this.dataReady3 = true;
+            this.merchandiseSelected = res4.data[0].id
+            this.dataReady4 = true
+            this.fetchChartData()
         })
     },
     mounted() {
         window.dc = this.chartData(1);
         window.addEventListener('resize', this.onResize)
     },
+    data() {
+        return {
+            dataReady1: false,
+            dataReady2: false,
+            dataReady3: false,
+            dataReady4: false,
+            chart1: [],
+            chart2: [],
+            chart3: [],
+            width: window.innerWidth,
+            height: window.innerHeight,
+            colors: {
+                colorBack: '#fff',
+                colorGrid: '#eee',
+                colorText: '#333',
+            },
+            merchandiseSelected: null,
+            merchandiseList: []
+        };
+    },
     methods: {
+        title(interval) {
+            let merchandise = _.find(this.merchandiseList, { id: this.merchandiseSelected });
+            return `${merchandise.slug} ${interval}`
+        },
         onResize() {
             this.width = window.innerWidth
             this.height = window.innerHeight
@@ -108,29 +113,42 @@ export default {
                 "tool": "Cursor"
             }
             return new DataCube(data)
+        },
+        fetchChartData() {
+            const params1 = {
+                merchandise_rate_id: this.merchandiseSelected,
+                time_type: 4
+            }
+            this.$store.dispatch('getCandleStickData', params1).then(res1 => {
+                this.chart1 = res1.data.ohlcv
+                this.dataReady1 = true;
+            })
+            const params2 = {
+                merchandise_rate_id: this.merchandiseSelected,
+                time_type: 1
+            }
+            this.$store.dispatch('getCandleStickData', params2).then(res2 => {
+                this.chart2 = res2.data.ohlcv
+                this.dataReady2 = true;
+            })
+
+            const params3 = {
+                merchandise_rate_id: this.merchandiseSelected,
+                time_type: 5
+            }
+            this.$store.dispatch('getCandleStickData', params3).then(res3 => {
+                this.chart3 = res3.data.ohlcv
+                this.dataReady3 = true;
+            })
+        },
+        onSelectMerchandise(merchandiseSelected) {
+            bus.$emit('select-merchandise', merchandiseSelected)
+            this.merchandiseSelected = merchandiseSelected
+            this.fetchChartData()
         }
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.onResize)
-    },
-    data() {
-        return {
-            dataReady1: false,
-            dataReady2: false,
-            dataReady3: false,
-            chart1: [],
-            chart2: [],
-            chart3: [],
-            width: window.innerWidth,
-            height: window.innerHeight,
-            colors: {
-                colorBack: '#fff',
-                colorGrid: '#eee',
-                colorText: '#333',
-            },
-            merchandiseSeleted: {},
-            merchandiseList: {}
-        };
     }
 };
 </script>
