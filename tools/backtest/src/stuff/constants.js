@@ -72,32 +72,63 @@ const IB_TF_WARN =
     `otherwise you can get an unexpected behaviour`
 
 const MAP_UNIT = {
-  "1s": SECOND,
-  "5s": SECOND * 5,
-  "10s": SECOND * 10,
-  "20s": SECOND * 20,
-  "30s": SECOND * 30,
-  "1m": MINUTE,
-  "3m": MINUTE3,
-  "5m": MINUTE5,
-  "15m": MINUTE15,
-  "30m": MINUTE30,
-  "1H": HOUR,
-  "2H": HOUR * 2,
-  "3H": HOUR * 3,
-  "4H": HOUR4,
-  "12H": HOUR12,
-  "1D": DAY,
-  "1W": WEEK,
-  "1M": MONTH,
-  "1Y": YEAR
+    "1s": SECOND,
+    "5s": SECOND * 5,
+    "10s": SECOND * 10,
+    "20s": SECOND * 20,
+    "30s": SECOND * 30,
+    "1m": MINUTE,
+    "3m": MINUTE3,
+    "5m": MINUTE5,
+    "15m": MINUTE15,
+    "30m": MINUTE30,
+    "1H": HOUR,
+    "2H": HOUR * 2,
+    "3H": HOUR * 3,
+    "4H": HOUR4,
+    "12H": HOUR12,
+    "1D": DAY,
+    "1W": WEEK,
+    "1M": MONTH,
+    "1Y": YEAR
+}
+
+const MAP_INTERVAL = {
+    1: "1D",
+    2: "1W",
+    3: "1M",
+    4: "1H",
+    5: "15m"
 }
 
 // config
 const API_ENDPOINT = "http://localhost:4000/api/v1"
 
+// Data structer
+const DATA_STRUCTURE = {
+    "onchart": [],
+    "offchart": [],
+    "tools": [
+        {
+            "type": "Cursor",
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAgMAAAC5h23wAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAxQTFRFAAAATU1NTU1NTU1NwlMHHwAAAAR0Uk5TAOvhxbpPrUkAAAAkSURBVHicY2BgYHBggAByabxg1WoGBq2pRCk9AKUbcND43AEAufYHlSuusE4AAAAASUVORK5CYII="
+        },
+        {
+            "type": "LineToolSegment",
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAgMAAAC5h23wAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAlQTFRFAAAATU1NJCQkCxcHIQAAAAN0Uk5TAP8SmutI5AAAACxJREFUeJxjYMACGAMgNAsLdpoVKi8AVe8A1QblQlWRKt0AoULw2w1zGxoAABdiAviQhF/mAAAAAElFTkSuQmCC"
+        },
+        {
+            "type": "LineToolExtended",
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAQMAAAD+JxcgAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAATU1NkJ+rOQAAAAJ0Uk5TAP9bkSK1AAAANElEQVR4nGNggABGEMEEIlhABAeI+AASF0AlHmAqA4kzKAAx8wGQuAMKwd6AoYzBAWonAwAcLwTgNfJ3RQAAAABJRU5ErkJggg=="
+        }
+    ],
+    "tool": "Cursor"
+}
+
 export default {
     API_ENDPOINT: API_ENDPOINT,
+    MAP_INTERVAL: MAP_INTERVAL,
+    DATA_STRUCTURE: DATA_STRUCTURE,
     SECOND: SECOND,
     MINUTE: MINUTE,
     MINUTE5: MINUTE5,

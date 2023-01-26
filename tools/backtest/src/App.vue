@@ -1,7 +1,7 @@
 <template>
     <div v-if="dataReady1 && dataReady2 && dataReady3">
         <trading-vue :data="this.chartData(1)"
-            :title-txt="this.title('1H')"
+            :title-txt="this.title('main')"
             :width="this.width/2"
             :height="this.height/2"
             :color-back="colors.colorBack"
@@ -10,7 +10,7 @@
             id="main-trading-vue">
         </trading-vue>
         <trading-vue :data="this.chartData(2)"
-            :title-txt="this.title('1D')"
+            :title-txt="this.title('btc')"
             :width="this.width/2"
             :height="this.height/2"
             :color-back="colors.colorBack"
@@ -19,7 +19,7 @@
             id="btc-trading-vue">
         </trading-vue>
         <trading-vue :data="this.chartData(3)"
-            :title-txt="this.title('15m')"
+            :title-txt="this.title('cross')"
             :width="this.width/2"
             :height="this.height/2"
             :color-back="colors.colorBack"
@@ -44,6 +44,7 @@ import ConfigChart from './components/ConfigChart.vue'
 import DataCube from '../src/helpers/datacube.js'
 import bus from './stuff/bus.js'
 import _ from "lodash"
+import Const from "./stuff/constants.js"
 
 export default {
     name: 'app',
@@ -51,6 +52,7 @@ export default {
         TradingVue, ConfigChart
     },
     created() {
+        this.updateMerchandiseRateSelected()
         this.fetchChartData()
     },
     mounted() {
@@ -75,13 +77,43 @@ export default {
             configSelected: {
                 merchandiseId: this.$store.state.merchandises[3].id,
                 intervalType: this.$store.state.intervals.m15
+            },
+            merchandiseRateSelected: {
+                // Cặp alt/usdt
+                mainId: null,
+                // Cặp btc/usdt
+                btcId: this.$store.state.merchandiseRates[0].id,
+                // Cặp chéo alt/btc
+                crossId: null
             }
         };
     },
+    computed: {
+        findMerchandiseRateMain() {
+            const merchandise = _.find(this.$store.state.merchandiseRates, { base_id: this.configSelected.merchandiseId, quote_id: 13 });
+            return merchandise
+        },
+        findMerchandiseRateCross() {
+            const merchandise = _.find(this.$store.state.merchandiseRates, { base_id: this.configSelected.merchandiseId, quote_id: 14 });
+            return merchandise
+        },
+    },
     methods: {
-        title(interval) {
-            let merchandise = _.find(this.$store.state.merchandises, { id: this.configSelected.merchandiseId });
-            return `${merchandise.slug} ${interval}`
+        title(chartName) {
+            let merchandiseRate;
+            switch (chartName) {
+                case 'main':
+                    merchandiseRate = this.findMerchandiseRateMain
+                    break
+                case 'cross':
+                    merchandiseRate = this.findMerchandiseRateCross
+                    break
+                default:
+                    merchandiseRate = this.$store.state.merchandiseRates[0]
+                    break
+            }
+
+            return `${merchandiseRate.slug} ${Const.MAP_INTERVAL[this.configSelected.intervalType]}`
         },
         onResize() {
             this.width = window.innerWidth
@@ -90,35 +122,19 @@ export default {
         chartData(number) {
             const data = {
                 "ohlcv": this[`chart${number}`],
-                "onchart": [],
-                "offchart": [],
-                "tools": [
-                    {
-                        "type": "Cursor",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAgMAAAC5h23wAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAxQTFRFAAAATU1NTU1NTU1NwlMHHwAAAAR0Uk5TAOvhxbpPrUkAAAAkSURBVHicY2BgYHBggAByabxg1WoGBq2pRCk9AKUbcND43AEAufYHlSuusE4AAAAASUVORK5CYII="
-                    },
-                    {
-                        "type": "LineToolSegment",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAgMAAAC5h23wAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAlQTFRFAAAATU1NJCQkCxcHIQAAAAN0Uk5TAP8SmutI5AAAACxJREFUeJxjYMACGAMgNAsLdpoVKi8AVe8A1QblQlWRKt0AoULw2w1zGxoAABdiAviQhF/mAAAAAElFTkSuQmCC"
-                    },
-                    {
-                        "type": "LineToolExtended",
-                        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAQMAAAD+JxcgAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAATU1NkJ+rOQAAAAJ0Uk5TAP9bkSK1AAAANElEQVR4nGNggABGEMEEIlhABAeI+AASF0AlHmAqA4kzKAAx8wGQuAMKwd6AoYzBAWonAwAcLwTgNfJ3RQAAAABJRU5ErkJggg=="
-                    }
-                ],
-                "tool": "Cursor"
+                ...Const.DATA_STRUCTURE
             }
             return new DataCube(data)
         },
         fetchChartData() {
-            this.fetchChartDataByInterval(1, this.$store.state.intervals.hour)
-            this.fetchChartDataByInterval(2, this.$store.state.intervals.day)
-            this.fetchChartDataByInterval(3, this.$store.state.intervals.m15)
+            this.fetchChartDataByMerchandiseRate(1, this.merchandiseRateSelected.mainId)
+            this.fetchChartDataByMerchandiseRate(2, this.merchandiseRateSelected.btcId)
+            this.fetchChartDataByMerchandiseRate(3, this.merchandiseRateSelected.crossId)
         },
-        fetchChartDataByInterval(chartNumber, interval) {
+        fetchChartDataByMerchandiseRate(chartNumber, merchandiseId) {
             const params = {
-                merchandise_rate_id: this.configSelected.merchandiseId,
-                time_type: interval
+                merchandise_rate_id: merchandiseId,
+                time_type: this.configSelected.intervalType
             }
             this.$store.dispatch('getCandleStickData', params).then(res => {
                 this[`chart${chartNumber}`] = res.data.ohlcv
@@ -128,12 +144,18 @@ export default {
         onSelectMerchandise(merchandiseSelected) {
             bus.$emit('select-merchandise', merchandiseSelected)
             this.configSelected.merchandiseId = merchandiseSelected
+            this.updateMerchandiseRateSelected()
             this.fetchChartData()
         },
         onSelectInterval(intervalSelected) {
             bus.$emit('select-interval', intervalSelected)
             this.configSelected.intervalType = intervalSelected
+            this.updateMerchandiseRateSelected()
             this.fetchChartData()
+        },
+        updateMerchandiseRateSelected() {
+            this.merchandiseRateSelected.mainId = this.findMerchandiseRateMain.id
+            this.merchandiseRateSelected.crossId = this.findMerchandiseRateCross.id
         }
     },
     beforeDestroy() {
