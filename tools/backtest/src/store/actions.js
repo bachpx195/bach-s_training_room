@@ -100,3 +100,8 @@ export function getMerchandisekData (context) {
   const endpoint = 'merchandise_rates'
   return apiGet(context, endpoint)
 }
+
+export function fetchCommonData (context) {
+  const res = getMerchandisekData()
+  context.commit(SET_STATE, { merchandiseList: res})
+}

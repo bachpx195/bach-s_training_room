@@ -1,5 +1,5 @@
 <template>
-    <div v-if="dataReady1 && dataReady2 && dataReady3 && dataReady4">
+    <div v-if="dataReady1 && dataReady2 && dataReady3">
         <trading-vue :data="this.chartData(1)"
             :title-txt="this.title('1H')"
             :width="this.width/2"
@@ -30,9 +30,9 @@
         <config-chart
             :width="this.width/2"
             :height="this.height/2"
-            :list="this.merchandiseList"
-            :selected="this.merchandiseSelected"
+            :selected="this.configSelected"
             @select-merchandise="onSelectMerchandise"
+            @select-interval="onSelectInterval"
         >
         </config-chart>
     </div>
@@ -51,12 +51,7 @@ export default {
         TradingVue, ConfigChart
     },
     created() {
-        this.$store.dispatch('getMerchandisekData').then(res4 => {
-            this.merchandiseList = res4.data
-            this.merchandiseSelected = res4.data[0].id
-            this.dataReady4 = true
-            this.fetchChartData()
-        })
+        this.fetchChartData()
     },
     mounted() {
         window.dc = this.chartData(1);
@@ -67,7 +62,6 @@ export default {
             dataReady1: false,
             dataReady2: false,
             dataReady3: false,
-            dataReady4: false,
             chart1: [],
             chart2: [],
             chart3: [],
@@ -78,13 +72,15 @@ export default {
                 colorGrid: '#eee',
                 colorText: '#333',
             },
-            merchandiseSelected: null,
-            merchandiseList: []
+            configSelected: {
+                merchandiseId: this.$store.state.merchandises[3].id,
+                intervalType: this.$store.state.intervals.m15
+            }
         };
     },
     methods: {
         title(interval) {
-            let merchandise = _.find(this.merchandiseList, { id: this.merchandiseSelected });
+            let merchandise = _.find(this.$store.state.merchandises, { id: this.configSelected.merchandiseId });
             return `${merchandise.slug} ${interval}`
         },
         onResize() {
@@ -115,35 +111,28 @@ export default {
             return new DataCube(data)
         },
         fetchChartData() {
-            const params1 = {
-                merchandise_rate_id: this.merchandiseSelected,
-                time_type: 4
+            this.fetchChartDataByInterval(1, this.$store.state.intervals.hour)
+            this.fetchChartDataByInterval(2, this.$store.state.intervals.day)
+            this.fetchChartDataByInterval(3, this.$store.state.intervals.m15)
+        },
+        fetchChartDataByInterval(chartNumber, interval) {
+            const params = {
+                merchandise_rate_id: this.configSelected.merchandiseId,
+                time_type: interval
             }
-            this.$store.dispatch('getCandleStickData', params1).then(res1 => {
-                this.chart1 = res1.data.ohlcv
-                this.dataReady1 = true;
-            })
-            const params2 = {
-                merchandise_rate_id: this.merchandiseSelected,
-                time_type: 1
-            }
-            this.$store.dispatch('getCandleStickData', params2).then(res2 => {
-                this.chart2 = res2.data.ohlcv
-                this.dataReady2 = true;
-            })
-
-            const params3 = {
-                merchandise_rate_id: this.merchandiseSelected,
-                time_type: 5
-            }
-            this.$store.dispatch('getCandleStickData', params3).then(res3 => {
-                this.chart3 = res3.data.ohlcv
-                this.dataReady3 = true;
+            this.$store.dispatch('getCandleStickData', params).then(res => {
+                this[`chart${chartNumber}`] = res.data.ohlcv
+                this[`dataReady${chartNumber}`] = true;
             })
         },
         onSelectMerchandise(merchandiseSelected) {
             bus.$emit('select-merchandise', merchandiseSelected)
-            this.merchandiseSelected = merchandiseSelected
+            this.configSelected.merchandiseId = merchandiseSelected
+            this.fetchChartData()
+        },
+        onSelectInterval(intervalSelected) {
+            bus.$emit('select-interval', intervalSelected)
+            this.configSelected.intervalType = intervalSelected
             this.fetchChartData()
         }
     },

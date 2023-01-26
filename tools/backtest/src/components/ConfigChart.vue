@@ -6,9 +6,17 @@
         <p class="config-title">Backtest Tool ver1</p>
         <div class="config-select">
             <label for="select-coin">Select coin</label>
-            <select v-model="merchandiseSelected" name="select-coin" class="form-control" @change="changeMerchandise">
+            <select v-model="configSelected.merchandiseId" name="select-coin" class="form-control" @change="changeMerchandise">
                 <option v-for="mr in this.merchandiseList" :value="mr.id" :key="mr.id">
                     {{ mr.slug }}
+                </option>
+            </select>
+        </div>
+        <div class="config-select">
+            <label for="select-coin">Select interval</label>
+            <select v-model="configSelected.intervalType" name="select-coin" class="form-control" @change="changeInterval">
+                <option v-for="(value, key) in this.intervalList" :value="value" :key="value">
+                    {{ key }}
                 </option>
             </select>
         </div>
@@ -24,27 +32,27 @@ export default {
     components: {},
     mixins: [],
     props: {
-        list: {
-            type: Array,
-            default: function () { return [] }
-        },
-        selected: {
-            type: Number,
-            default: 34
-        },
-        width: {
-            type: Number,
-            default: 800
-        },
-        height: {
-            type: Number,
-            default: 421
-        }
+      selected: {
+          type: Object
+      },
+      width: {
+          type: Number,
+          default: 800
+      },
+      height: {
+          type: Number,
+          default: 421
+      }
     },
     data() {
         return {
-            merchandiseList: this.$props.list,
-            merchandiseSelected: this.$props.selected,
+            merchandiseList: this.$store.state.merchandises,
+            intervalList: this.$store.state.intervals,
+            intervalSelected: null,
+            configSelected: {
+                merchandiseId: this.$props.selected.merchandiseId,
+                intervalType: this.$props.selected.intervalType,
+            },
             logo
         }
     },
@@ -55,7 +63,10 @@ export default {
     },
     methods: {
         changeMerchandise () {
-            this.$emit('select-merchandise', this.merchandiseSelected)
+            this.$emit('select-merchandise', this.configSelected.merchandiseId)
+        },
+        changeInterval() {
+            this.$emit('select-interval', this.configSelected.intervalType)
         }
     }
 }
