@@ -5,7 +5,6 @@
   "scripts": {
     "build": "webpack  --config webpack/build.config.js --mode production --progress",
     "auto-test": "ava",
-    "cdn": "webpack serve --config webpack/cdn.config.js --mode development --progress --hot",
     "dev": "webpack serve --config webpack/dev.config.js --mode development --progress --hot",
     "eslint": "./node_modules/.bin/eslint --ext .js,.vue src",
     "test": "webpack serve --config webpack/test.config.js --mode development --progress --hot",

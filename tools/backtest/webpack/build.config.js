@@ -5,14 +5,7 @@ const webpack = require('webpack')
 const path = require('path')
 const fs = require('fs')
 
-const VERS = require('../package.json').version
-const DATE = new Date().toDateString()
-const BANNER =
-
-`TradingVue.JS - v${VERS} - ${DATE}\n` +
-`    https://github.com/tvjsx/trading-vue-js\n` +
-`    Copyright (c) 2019 C451 Code's All Right;\n` +
-`    Licensed under the MIT license`
+const BANNER = ""
 
 if (!fs.existsSync('./src/helpers/tmp/ww$$$.json')) {
     console.log('Web-worker is not compiled. Run `npm run ww`\n')
