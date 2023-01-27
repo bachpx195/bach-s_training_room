@@ -10,15 +10,15 @@
         </chart-legend>
         <grid v-bind="grid_props" ref="grid"
             v-bind:grid_id="grid_id"
-             v-on:register-kb-listener="register_kb"
-             v-on:remove-kb-listener="remove_kb"
-             v-on:range-changed="range_changed"
-             v-on:cursor-changed="cursor_changed"
-             v-on:cursor-locked="cursor_locked"
-             v-on:layer-meta-props="emit_meta_props"
-             v-on:custom-event="emit_custom_event"
-             v-on:sidebar-transform="sidebar_transform"
-             v-on:rezoom-range="rezoom_range">
+            v-on:register-kb-listener="register_kb"
+            v-on:remove-kb-listener="remove_kb"
+            v-on:range-changed="range_changed"
+            v-on:cursor-changed="cursor_changed"
+            v-on:cursor-locked="cursor_locked"
+            v-on:layer-meta-props="emit_meta_props"
+            v-on:custom-event="emit_custom_event"
+            v-on:sidebar-transform="sidebar_transform"
+            v-on:rezoom-range="rezoom_range">
         </grid>
         <sidebar
             :ref="'sb-' + grid_id"
