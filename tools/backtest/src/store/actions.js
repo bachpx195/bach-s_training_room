@@ -96,12 +96,17 @@ export function getCandleStickData (context, payload) {
   return apiGet(context, `${endpoint}/${buildQueryString(params)}`)
 }
 
-export function getMerchandisekData (context) {
+export function getMerchandiseData (context) {
   const endpoint = 'merchandise_rates'
   return apiGet(context, endpoint)
 }
 
 export function fetchCommonData (context) {
-  const res = getMerchandisekData()
+  const res = getMerchandiseData()
   context.commit(SET_STATE, { merchandiseList: res})
+}
+
+export function asyncCandlestickData (context, payload) {
+  const endpoint = 'candlesticks/async_update_data'
+  return apiPost(context, endpoint, payload)
 }

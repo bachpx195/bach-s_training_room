@@ -1,5 +1,6 @@
 <template>
     <div v-if="dataReady1 && dataReady2 && dataReady3">
+        <loading-screen v-if="isLoading"></loading-screen>
         <trading-vue :data="this.chartData(1)"
             :title-txt="this.title('main')"
             :width="this.width/2"
@@ -33,6 +34,7 @@
             :selected="this.configSelected"
             @select-merchandise="onSelectMerchandise"
             @select-interval="onSelectInterval"
+            @async-candlestick-data="asyncCandlestickData"
         >
         </config-chart>
     </div>
@@ -41,6 +43,7 @@
 <script>
 import TradingVue from './TradingVue.vue'
 import ConfigChart from './components/ConfigChart.vue'
+import LoadingScreen from './components/LoadingScreen.vue'
 import DataCube from '../src/helpers/datacube.js'
 import bus from './stuff/bus.js'
 import _ from "lodash"
@@ -49,7 +52,7 @@ import Const from "./stuff/constants.js"
 export default {
     name: 'app',
     components: {
-        TradingVue, ConfigChart
+        TradingVue, ConfigChart, LoadingScreen
     },
     created() {
         this.updateMerchandiseRateSelected()
@@ -61,6 +64,7 @@ export default {
     },
     data() {
         return {
+            isLoading: false,
             dataReady1: false,
             dataReady2: false,
             dataReady3: false,
@@ -156,6 +160,18 @@ export default {
         updateMerchandiseRateSelected() {
             this.merchandiseRateSelected.mainId = this.findMerchandiseRateMain.id
             this.merchandiseRateSelected.crossId = this.findMerchandiseRateCross.id
+        },
+        asyncCandlestickData() {
+            this.isLoading = true
+            const params = {
+                merchandise_rate_ids: [this.merchandiseRateSelected.mainId, this.merchandiseRateSelected.btcId, this.merchandiseRateSelected.crossId],
+                time_type: this.configSelected.intervalType
+            }
+            this.$store.dispatch('asyncCandlestickData', params).then(res => {
+                this.fetchChartData()
+                this.isLoading = false
+                alert(res.data.lastest_time)
+            })
         }
     },
     beforeDestroy() {
