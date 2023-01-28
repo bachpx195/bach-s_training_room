@@ -45,7 +45,7 @@ module.exports = (env, options) => ({
         new HtmlWebpackPlugin({
             template: './src/index.html'
         }),
-        new WWPlugin(),
+        // new WWPlugin(),
         new webpack.DefinePlugin({
             MOB_DEBUG: JSON.stringify(process.env.MOB_DEBUG)
         })

@@ -17,24 +17,26 @@ class WebWork {
     }
 
     start() {
-        if (this.worker) this.worker.terminate()
-        // URL.createObjectURL
-        window.URL = window.URL || window.webkitURL
-        let data = lz.decompressFromBase64(worker_data[0])
-        var blob
-        try {
-            blob = new Blob([data], {type: 'application/javascript'})
-        } catch (e) {
-            // Backwards-compatibility
-            window.BlobBuilder = window.BlobBuilder ||
-                window.WebKitBlobBuilder ||
-                window.MozBlobBuilder
-            blob = new BlobBuilder()
-            blob.append(data)
-            blob = blob.getBlob()
-        }
-        this.worker = new Worker(URL.createObjectURL(blob))
-        this.worker.onmessage = e => this.onmessage(e)
+        // TODO: Fix web worker
+
+        // if (this.worker) this.worker.terminate()
+        // // URL.createObjectURL
+        // window.URL = window.URL || window.webkitURL
+        // let data = lz.decompressFromBase64(worker_data[0])
+        // var blob
+        // try {
+        //     blob = new Blob([data], {type: 'application/javascript'})
+        // } catch (e) {
+        //     // Backwards-compatibility
+        //     window.BlobBuilder = window.BlobBuilder ||
+        //         window.WebKitBlobBuilder ||
+        //         window.MozBlobBuilder
+        //     blob = new BlobBuilder()
+        //     blob.append(data)
+        //     blob = blob.getBlob()
+        // }
+        // this.worker = new Worker(URL.createObjectURL(blob))
+        // this.worker.onmessage = e => this.onmessage(e)
     }
 
     start_socket() {
@@ -47,15 +49,17 @@ class WebWork {
     }
 
     send(msg, tx_keys) {
-        if (this.dc.sett.node_url) {
-            return this.send_node(msg, tx_keys)
-        }
-        if (tx_keys) {
-            let tx_objs = tx_keys.map(k => msg.data[k])
-            this.worker.postMessage(msg, tx_objs)
-        } else {
-            this.worker.postMessage(msg)
-        }
+        // TODO: Fix web worker
+
+        // if (this.dc.sett.node_url) {
+        //     return this.send_node(msg, tx_keys)
+        // }
+        // if (tx_keys) {
+        //     let tx_objs = tx_keys.map(k => msg.data[k])
+        //     this.worker.postMessage(msg, tx_objs)
+        // } else {
+        //     this.worker.postMessage(msg)
+        // }
     }
 
     // Send to node.js via websocket
