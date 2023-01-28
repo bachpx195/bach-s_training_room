@@ -73,11 +73,7 @@ export default {
             chart3: [],
             width: window.innerWidth,
             height: window.innerHeight,
-            colors: {
-                colorBack: '#fff',
-                colorGrid: '#eee',
-                colorText: '#333',
-            },
+            colors: {},
             configSelected: {
                 merchandiseId: this.$store.state.merchandises[3].id,
                 intervalType: this.$store.state.intervals.m15
