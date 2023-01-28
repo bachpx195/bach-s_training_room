@@ -20,6 +20,11 @@
                 </option>
             </select>
         </div>
+        <div class="config-select">
+            <button @click="asyncUpdateData">
+                Update data
+            </button>
+        </div>
     </div>
 </template>
 
@@ -67,6 +72,9 @@ export default {
         },
         changeInterval() {
             this.$emit('select-interval', this.configSelected.intervalType)
+        },
+        asyncUpdateData() {
+            this.$emit('async-candlestick-data')
         }
     }
 }
