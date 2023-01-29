@@ -51,8 +51,6 @@ import _ from "lodash"
 import Const from "./stuff/constants.js"
 import moment from 'moment'
 
-// Vue.prototype.moment = moment
-
 export default {
     name: 'app',
     components: {
