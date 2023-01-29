@@ -181,7 +181,7 @@ export default {
         },
         timezone: {
             type: Number,
-            default: 0
+            default: 7
         }
     },
     computed: {
