@@ -89,11 +89,7 @@ const emptyPromise = () => {
 
 export function getCandleStickData (context, payload) {
   const endpoint = 'candlesticks'
-  const params = {
-    merchandise_rate_id: payload.merchandise_rate_id,
-    time_type: payload.time_type,
-  }
-  return apiGet(context, `${endpoint}/${buildQueryString(params)}`)
+  return apiGet(context, `${endpoint}/${buildQueryString(payload)}`)
 }
 
 export function getMerchandiseData (context) {

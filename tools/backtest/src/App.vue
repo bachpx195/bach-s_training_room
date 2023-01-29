@@ -34,6 +34,7 @@
             :selected="this.configSelected"
             @select-merchandise="onSelectMerchandise"
             @select-interval="onSelectInterval"
+            @select-date="onSelectDate"
             @async-candlestick-data="asyncCandlestickData"
         >
         </config-chart>
@@ -48,6 +49,9 @@ import DataCube from '../src/helpers/datacube.js'
 import bus from './stuff/bus.js'
 import _ from "lodash"
 import Const from "./stuff/constants.js"
+import moment from 'moment'
+
+// Vue.prototype.moment = moment
 
 export default {
     name: 'app',
@@ -126,15 +130,16 @@ export default {
             }
             return new DataCube(data)
         },
-        fetchChartData() {
-            this.fetchChartDataByMerchandiseRate(1, this.merchandiseRateSelected.mainId)
-            this.fetchChartDataByMerchandiseRate(2, this.merchandiseRateSelected.btcId)
-            this.fetchChartDataByMerchandiseRate(3, this.merchandiseRateSelected.crossId)
+        fetchChartData(date) {
+            this.fetchChartDataByMerchandiseRate(1, this.merchandiseRateSelected.mainId, date)
+            this.fetchChartDataByMerchandiseRate(2, this.merchandiseRateSelected.btcId, date)
+            this.fetchChartDataByMerchandiseRate(3, this.merchandiseRateSelected.crossId, date)
         },
-        fetchChartDataByMerchandiseRate(chartNumber, merchandiseId) {
+        fetchChartDataByMerchandiseRate(chartNumber, merchandiseId, date) {
             const params = {
                 merchandise_rate_id: merchandiseId,
-                time_type: this.configSelected.intervalType
+                time_type: this.configSelected.intervalType,
+                date: date
             }
             this.$store.dispatch('getCandleStickData', params).then(res => {
                 this[`chart${chartNumber}`] = res.data.ohlcv
@@ -152,6 +157,11 @@ export default {
             this.configSelected.intervalType = intervalSelected
             this.updateMerchandiseRateSelected()
             this.fetchChartData()
+        },
+        onSelectDate(date) {
+            bus.$emit('select-date', date)
+            const dateParam = moment(date).format('YYYY-MM-DD')
+            this.fetchChartData(dateParam)
         },
         updateMerchandiseRateSelected() {
             this.merchandiseRateSelected.mainId = this.findMerchandiseRateMain.id

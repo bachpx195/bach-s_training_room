@@ -21,8 +21,16 @@
             </select>
         </div>
         <div class="config-select">
+            <label for="select-coin">Update data</label>
             <button @click="asyncUpdateData">
-                Update data
+                Update
+            </button>
+        </div>
+        <div class="config-select">
+            <label for="select-coin">Select date</label>
+            <dropdown-datepicker :on-change="changeDate"></dropdown-datepicker>
+            <button @click="asyncUpdateData">
+                Update
             </button>
         </div>
     </div>
@@ -31,10 +39,12 @@
 <script>
 
 import logo from '../assets/logo.png';
+import DropdownDatepicker from './DropdownDatepicker.vue'
+import _ from "lodash"
 
 export default {
     name: 'ConfigChart',
-    components: {},
+    components: { DropdownDatepicker },
     mixins: [],
     props: {
       selected: {
@@ -72,6 +82,12 @@ export default {
         },
         changeInterval() {
             this.$emit('select-interval', this.configSelected.intervalType)
+        },
+        changeDate(day, month, year) {
+            if (_.toInteger(day) > 0 && _.toInteger(month) > 0 && _.toInteger(year) > 0) {
+                const date = new Date(_.toInteger(year), _.toInteger(month) - 1, _.toInteger(day))
+                this.$emit('select-date', date)
+            }
         },
         asyncUpdateData() {
             this.$emit('async-candlestick-data')
