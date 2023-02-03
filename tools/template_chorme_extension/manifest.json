@@ -1,0 +1,31 @@
+{
+  "manifest_version": 1,
+  "name": "BachsTemplateExtension",
+  "description": "Tạo template cho github",
+  "version": "1.0",
+  "icons": {
+    "16": "images/icon.png",
+    "48": "images/icon.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "js": [
+        "scripts/lib/lodash.js",
+        "scripts/lib/jquery.js",
+        "scripts/settings.js",
+        "scripts/content.js"
+      ],
+      "css": [
+        "styles/lib/bootstrap.css",
+        "styles/content.css"
+      ],
+      "matches": [
+        "https://github.com/bachpx195/bach-s_trading_room/issues/new?*",
+        "https://github.com/bachpx195/bach-s_trading_room/issues/*"
+      ]
+    }
+  ]
+}
