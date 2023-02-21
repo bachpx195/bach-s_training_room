@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "BachsTemplateExtension",
-  "description": "Tạo template cho github",
+  "name": "BachsCrawlHistoryExtension",
+  "description": "Lay history tren binace",
   "version": "1.0",
   "icons": {
     "16": "images/icon.png",
@@ -23,8 +23,7 @@
         "styles/content.css"
       ],
       "matches": [
-        "https://github.com/bachpx195/bach-s_trading_room/issues/new?*",
-        "https://github.com/bachpx195/bach-s_trading_room/issues/*"
+        "https://www.binance.com/vi/futures/*"
       ]
     }
   ]

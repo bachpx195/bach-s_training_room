@@ -1,8 +1,3 @@
-const LINK_REGEX = /!\[.+\]\(\/uploads\/.+\)/g;
-const TICKET_REGEX = /([M|m][B|b]-\d+)/g;
-const TICKET_REPLACE = "[$1](https://kitletz.backlog.com/view/$1)";
-const DEFAULT_INDENT = "  ";
-
 const SELECTOR = {
   mergeForm: ".merge-request-form",
   markdownContainer: "#issue_body",
