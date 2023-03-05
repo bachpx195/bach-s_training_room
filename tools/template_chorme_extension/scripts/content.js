@@ -3,6 +3,7 @@ window.onload = async function() {
 
   // $(SELECTOR.markdownContainer).prepend(MB.templateButton);
   $(MB.templateHTML).insertBefore(SELECTOR.markdownInput);
+  $(SELECTOR.markdownInput).hide();
   console.log("bach da o day")
   console.log("bach da o day")
 
