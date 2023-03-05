@@ -5,9 +5,9 @@ const DEFAULT_INDENT = "  ";
 
 const SELECTOR = {
   mergeForm: ".merge-request-form",
-  markdownContainer: "#issue_body",
+  markdownContainer: ".js-previewable-comment-form",
   // markdownContainer: ".merge-request-form .md-area",
-  markdownInput: "#issue_body",
+  markdownInput: ".js-previewable-comment-form",
   markdownWriteButton: ".js-md-write-button",
   mergeTitle: "#merge_request_title",
   showTemplateButton: "#btn-show-template",
@@ -94,27 +94,6 @@ const MB = {
         <a class="nav-link" role="tab" data-toggle="pill" id="v-work-tab"
           href="#v-work" aria-controls="v-work" aria-selected="false">
           <span>Kế hoạch giao dịch</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
-            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-          </svg>
-        </a>
-        <a class="nav-link" role="tab" data-toggle="pill" id="v-impacted-area-tab"
-          href="#v-impacted-area" aria-controls="v-impacted-area" aria-selected="false">
-          <span>Ảnh hưởng</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
-            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-          </svg>
-        </a>
-        <a class="nav-link" role="tab" data-toggle="pill" id="v-tested-content-tab"
-          href="#v-tested-content" aria-controls="v-tested-content" aria-selected="false">
-          <span>Nội dung test</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
-            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-          </svg>
-        </a>
-        <a class="nav-link mb-4" role="tab" data-toggle="pill" id="v-note-tab"
-          href="#v-note" aria-controls="v-note" aria-selected="false">
-          <span>Điểm lưu ý</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
             <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
           </svg>
