@@ -285,3 +285,15 @@ npm run auto-test
 5. Create a new Pull Request
 
 Please read the guidelines in CONTRIBUTING.md
+
+## Run tool
+
+```bash
+# start api
+cd daily_trading_journey
+rails s -p 4000
+
+# start FE
+cd tools/backtest
+npm run dev
+```
