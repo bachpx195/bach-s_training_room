@@ -1,6 +1,6 @@
 ## Product goal
 
-### Backtest tool
+### 1. Backtest tool
 - Sử dụng tool giả lập thị trường trong quá khứ để rèn luyện kỹ năng giao dịch bao gồm
   1. Kĩ năng xử lý tình huống
   2. Kĩ năng kiềm chế bản thân trước những tín hiệu nhiễu của thị trường
