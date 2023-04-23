@@ -2,7 +2,7 @@
 
 ## Sprint Goal
 
-1. Hoàn thành kế hoạch giao "Sell in may" của tháng 5 sắp tới.
+1. Hoàn thành bản kế hoạch giao dịch "Sell in may" của tháng 5 sắp tới.
 2. Chỉnh sửa và áp dụng lại quy trình viết plan giao dịch và nhật kí mỗi ngày trên github
 
 ## Sprint Note
