@@ -2,7 +2,6 @@
 <template>
     <!-- Main component  -->
     <div id="config-chart" :style="style">
-        <img class="config-img" :src="logo">
         <p class="config-title">Backtest Tool ver1</p>
         <div class="config-select">
             <label for="select-coin">Select coin</label>
