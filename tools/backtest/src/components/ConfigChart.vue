@@ -2,7 +2,6 @@
 <template>
     <!-- Main component  -->
     <div id="config-chart" :style="style">
-        <img class="config-img" :src="logo">
         <p class="config-title">Backtest Tool ver1</p>
         <div class="config-select">
             <label for="select-coin">Select coin</label>
@@ -83,9 +82,13 @@ export default {
         changeInterval() {
             this.$emit('select-interval', this.configSelected.intervalType)
         },
-        changeDate(day, month, year) {
+        changeDate(minute, hour, day, month, year) {
+            minute = (_.isEmpty(minute)) ? 0 : minute
+            hour = (_.isEmpty(minute)) ? 0 : minute
             if (_.toInteger(day) > 0 && _.toInteger(month) > 0 && _.toInteger(year) > 0) {
-                const date = new Date(_.toInteger(year), _.toInteger(month) - 1, _.toInteger(day))
+                const date = new Date(_.toInteger(year), _.toInteger(month) - 1, _.toInteger(day), _.toInteger(minute), _.toInteger(hour))
+                console.log("hihih")
+                console.log(date)
                 this.$emit('select-date', date)
             }
         },

@@ -1,37 +1,21 @@
 <template>
     <div v-bind:class="wrapperClass">
-        <select-datepicker v-if="displayFormat == 'dmy'" name="day" id-name="day" v-bind:class="dropdownClass" v-bind:values="days"
-            v-bind:options='dayOptions' v-bind:on-change='dayChangeCallback' v-bind:value="day"
-            v-bind:required="required"></select-datepicker>
-        <select-datepicker v-if="displayFormat == 'dmy'" name="month" id-name="month" v-bind:class="dropdownClass"
-            v-bind:values="months" v-bind:options="monthOptions" v-bind:on-change='monthChangeCallback'
-            v-bind:value="month" v-bind:required="required"></select-datepicker>
-        <select-datepicker v-if="displayFormat == 'dmy'" name="year" id-name="year" v-bind:class="dropdownClass"
+        <select-datepicker name="year" id-name="year" v-bind:class="dropdownClass"
             v-bind:values="years" v-bind:options='yearOptions' v-bind:on-change='yearChangeCallback' v-bind:value="year"
             v-bind:required="required"></select-datepicker>
-
-        <select-datepicker v-if="displayFormat == 'ymd'" name="year" id-name="year" v-bind:class="dropdownClass"
-            v-bind:values="years" v-bind:options='yearOptions' v-bind:on-change='yearChangeCallback' v-bind:value="year"
-            v-bind:required="required"></select-datepicker>
-        <select-datepicker v-if="displayFormat == 'ymd'" name="month" id-name="month" v-bind:class="dropdownClass"
+        <select-datepicker name="month" id-name="month" v-bind:class="dropdownClass"
             v-bind:values="months" v-bind:options="monthOptions" v-bind:on-change='monthChangeCallback'
             v-bind:value="month" v-bind:required="required"></select-datepicker>
-        <select-datepicker v-if="displayFormat == 'ymd'" name="day" id-name="day" v-bind:class="dropdownClass" v-bind:values="days"
+        <select-datepicker name="day" id-name="day" v-bind:class="dropdownClass" v-bind:values="days"
             v-bind:options='dayOptions' v-bind:on-change='dayChangeCallback' v-bind:value="day"
             v-bind:required="required"></select-datepicker>
-
-        <select-datepicker v-if="displayFormat == 'mdy'" name="month" id-name="month" v-bind:class="dropdownClass"
-            v-bind:values="months" v-bind:options="monthOptions" v-bind:on-change='monthChangeCallback'
-            v-bind:value="month" v-bind:required="required"></select-datepicker>
-        <select-datepicker v-if="displayFormat == 'mdy'" name="day" id-name="day" v-bind:class="dropdownClass" v-bind:values="days"
-            v-bind:options='dayOptions' v-bind:on-change='dayChangeCallback' v-bind:value="day"
+        <select-datepicker name="hour" id-name="hour" v-bind:class="dropdownClass" v-bind:values="hours"
+            v-bind:options='hourOptions' v-bind:on-change='hourChangeCallback' v-bind:value="hour"
             v-bind:required="required"></select-datepicker>
-        <select-datepicker v-if="displayFormat == 'mdy'" name="year" id-name="year" v-bind:class="dropdownClass"
-            v-bind:values="years" v-bind:options='yearOptions' v-bind:on-change='yearChangeCallback' v-bind:value="year"
+        <select-datepicker name="minute" id-name="minute" v-bind:class="dropdownClass" v-bind:values="minutes"
+            v-bind:options='minuteOptions' v-bind:on-change='minuteChangeCallback' v-bind:value="hour"
             v-bind:required="required"></select-datepicker>
-
     </div>
-
 </template>
 
 <script>
@@ -43,7 +27,7 @@ export default {
         defaultDateFormat: { type: String, default: 'yyyy-mm-dd' },
         displayFormat: { type: String, default: 'dmy' },
         submitId: { type: String, default: '' },
-        submitFormat: { type: String, default: 'yyyy-mm-dd' },
+        submitFormat: { type: String, default: "%Y-%m-%d %H:%M"},
         minAge: { type: Number, default: null },
         maxAge: { type: Number, default: null },
         minYear: { type: Number, default: 2017 },
@@ -69,6 +53,8 @@ export default {
         onDayChange: { type: Function, default: null },
         onMonthChange: { type: Function, default: null },
         onYearChange: { type: Function, default: null },
+        onHourChange: { type: Function, default: null },
+        onMinuteChange: { type: Function, default: null },
         onChange: { type: Function, default: null },
         value: { type: String, default: null }
     },
@@ -77,7 +63,11 @@ export default {
     },
     data() {
         return {
-            day: null, month: null, year: null,
+            minute: null, hour: null, day: null, month: null, year: null,
+            minutes: [null, 0, 15, 30, 45],
+            minuteOptions: ['Minute', 0, 15, 30, 45],
+            hours: [null, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            hourOptions: ['Hour', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
             days: [],
             dayOptions: [],
             months: [],
@@ -378,7 +368,7 @@ export default {
             }
             this.changeCallback();
         },
-        formatSubmitDate: function (day, month, year) {
+        formatSubmitDate: function (hour, day, month, year) {
             var formattedDate,
                 _date;
             switch (this.submitFormat) {
@@ -391,11 +381,13 @@ export default {
                     break;
                 default:
                     formattedDate = this.submitFormat
+                        .replace('hh', ('0' + hour).slice(-2))
                         .replace('dd', ('0' + day).slice(-2))
                         .replace('mm', ('0' + month).slice(-2))
                         .replace('yyyy', year);
                     break;
             }
+            console.log(formattedDate)
             return formattedDate;
         },
         dayChangeCallback(value) {
@@ -405,16 +397,24 @@ export default {
             }
             this.changeCallback();
         },
+        hourChangeCallback(value) {
+            this.hour = value;
+            this.changeCallback();
+        },
+        minuteChangeCallback(value) {
+            this.minute = value;
+            this.changeCallback();
+        },
         changeCallback() {
-            if (this.day != null && this.month != null && this.year != null) {
-                var formattedDate = this.formatSubmitDate(this.day, this.month, this.year);
+            if (this.minute != null, this.hour != null && this.day != null && this.month != null && this.year != null) {
+                var formattedDate = this.formatSubmitDate(this.minute, this.hour, this.day, this.month, this.year);
                 if (this.submitId != '') {
                     document.getElementById(this.submitId).value = formattedDate;
                 }
                 this.$emit('input', formattedDate);
             }
             if (this.onChange != null) {
-                this.onChange(('0' + this.day).slice(-2), ('0' + this.month).slice(-2), this.year);
+                this.onChange(('0' + this.minute).slice(-2),('0' + this.hour).slice(-2),('0' + this.day).slice(-2), ('0' + this.month).slice(-2), this.year);
             }
         }
     }
