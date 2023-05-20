@@ -46,7 +46,7 @@ export default {
         monthLabel: { type: String, default: 'Month' },
         yearLabel: { type: String, default: 'Year' },
         sortYear: { type: String, default: 'desc' },
-        monthLongValues: { type: Array, default: () => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] },
+        monthLongValues: { type: Array, default: () => ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] },
         monthShortValues: { type: Array, default: () => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] },
         initialDayMonthYearValues: { type: Array, default: () => ['Day', 'Month', 'Year'] },
         daySuffixValues: { type: Array, default: () => ['st', 'nd', 'rd', 'th'] },
@@ -253,7 +253,7 @@ export default {
             // Days 1-9
             for (var i = start1; i <= end1; i++) {
                 if (this.daySuffixes) {
-                    day = i + this.getSuffix(i);
+                    day = i;
                 } else {
                     day = '0' + i;
                 }
@@ -270,7 +270,7 @@ export default {
                 for (var j = start2; j <= end2; j++) {
                     day = j;
                     if (this.daySuffixes) {
-                        day = j + this.getSuffix(j);
+                        day = j;
                     }
                     this.days.push(j);
                     this.dayOptions.push(day);
@@ -387,7 +387,6 @@ export default {
                         .replace('yyyy', year);
                     break;
             }
-            console.log(formattedDate)
             return formattedDate;
         },
         dayChangeCallback(value) {

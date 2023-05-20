@@ -35,6 +35,9 @@
                 Next
             </button>
         </div>
+        <div class="config-select">
+            {{ this.$props.currentTime }}
+        </div>
     </div>
 </template>
 
@@ -59,6 +62,9 @@ export default {
       height: {
           type: Number,
           default: 421
+      },
+      currentTime: {
+          type: String
       }
     },
     data() {
@@ -106,7 +112,7 @@ export default {
     position: fixed;
     bottom: 0;
     right: 0;
-    font-size: 30px;
+    font-size: 20px;
     color: red;
 }
 .config-title {

@@ -32,6 +32,7 @@
             :width="this.width/2"
             :height="this.height/2"
             :selected="this.configSelected"
+            :current-time="this.currentTime"
             @select-merchandise="onSelectMerchandise"
             @select-interval="onSelectInterval"
             @select-date="onSelectDate"
@@ -91,7 +92,8 @@ export default {
                 btcId: this.$store.state.merchandiseRates[0].id,
                 // Cặp chéo alt/btc
                 crossId: null
-            }
+            },
+            currentTime: null
         };
     },
     computed: {
@@ -147,6 +149,9 @@ export default {
                 this[`chart${chartNumber}`] = res.data.ohlcv
                 this[`chartFuture${chartNumber}`] = res.data.future_ohlcv
                 this[`dataReady${chartNumber}`] = true;
+                if(chartNumber == 1) {
+                    this.setCurrentTime()
+                }
             })
         },
         onSelectMerchandise(merchandiseSelected) {
@@ -193,6 +198,11 @@ export default {
             this.chartData(number)
             this[`chartFuture${number}`].shift()
             this[`dataReady${number}`] = true
+            this.setCurrentTime()
+        },
+        setCurrentTime() {
+            let lastDate = new Date(this.chart1[this.chart1.length - 2][0])
+            this.currentTime = lastDate.toString()
         }
     },
     beforeDestroy() {
