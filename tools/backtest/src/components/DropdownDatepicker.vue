@@ -414,7 +414,7 @@ export default {
                 this.$emit('input', formattedDate);
             }
             if (this.onChange != null) {
-                this.onChange(('0' + this.minute).slice(-2),('0' + this.hour).slice(-2),('0' + this.day).slice(-2), ('0' + this.month).slice(-2), this.year);
+                this.onChange(this.minute, this.hour, ('0' + this.day).slice(-2), ('0' + this.month).slice(-2), this.year);
             }
         }
     }
