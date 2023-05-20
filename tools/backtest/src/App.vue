@@ -36,6 +36,7 @@
             @select-interval="onSelectInterval"
             @select-date="onSelectDate"
             @async-candlestick-data="asyncCandlestickData"
+            @next-chart="nextChart"
         >
         </config-chart>
     </div>
@@ -73,6 +74,9 @@ export default {
             chart1: [],
             chart2: [],
             chart3: [],
+            chartFuture1: [],
+            chartFuture2: [],
+            chartFuture3: [],
             width: window.innerWidth,
             height: window.innerHeight,
             colors: {},
@@ -141,6 +145,7 @@ export default {
             }
             this.$store.dispatch('getCandleStickData', params).then(res => {
                 this[`chart${chartNumber}`] = res.data.ohlcv
+                this[`chartFuture${chartNumber}`] = res.data.future_ohlcv
                 this[`dataReady${chartNumber}`] = true;
             })
         },
@@ -158,7 +163,7 @@ export default {
         },
         onSelectDate(date) {
             bus.$emit('select-date', date)
-            const dateParam = moment(date).format('YYYY-MM-DD')
+            const dateParam = moment(date).format()
             this.fetchChartData(dateParam)
         },
         updateMerchandiseRateSelected() {
@@ -176,6 +181,18 @@ export default {
                 this.isLoading = false
                 alert(res.data.lastest_time)
             })
+        },
+        nextChart() {
+            this.setNextChartDate(1)
+            this.setNextChartDate(2)
+            this.setNextChartDate(3)
+        },
+        setNextChartDate(number) {
+            this[`dataReady${number}`] = false
+            this[`chart${number}`] = [...this[`chart${number}`], this[`chartFuture${number}`][0]]
+            this.chartData(number)
+            this[`chartFuture${number}`].shift()
+            this[`dataReady${number}`] = true
         }
     },
     beforeDestroy() {

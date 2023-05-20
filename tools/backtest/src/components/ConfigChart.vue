@@ -28,8 +28,11 @@
         <div class="config-select">
             <label for="select-coin">Select date</label>
             <dropdown-datepicker :on-change="changeDate"></dropdown-datepicker>
-            <button @click="asyncUpdateData">
-                Update
+        </div>
+        <br>
+        <div class="config-select">
+            <button class="next-btn" @click="nextChart">
+                Next
             </button>
         </div>
     </div>
@@ -83,27 +86,28 @@ export default {
             this.$emit('select-interval', this.configSelected.intervalType)
         },
         changeDate(minute, hour, day, month, year) {
-            minute = (_.isEmpty(minute)) ? 0 : minute
-            hour = (_.isEmpty(minute)) ? 0 : minute
-            if (_.toInteger(day) > 0 && _.toInteger(month) > 0 && _.toInteger(year) > 0) {
-                const date = new Date(_.toInteger(year), _.toInteger(month) - 1, _.toInteger(day), _.toInteger(minute), _.toInteger(hour))
-                console.log("hihih")
-                console.log(date)
+            if (_.toInteger(day) > 0 && _.toInteger(month) > 0 && _.toInteger(year) > 0 && !_.isNull(hour) && !_.isNull(minute)) {
+                const date = new Date(_.toInteger(year), _.toInteger(month) - 1, _.toInteger(day), hour, minute)
                 this.$emit('select-date', date)
             }
         },
         asyncUpdateData() {
             this.$emit('async-candlestick-data')
+        },
+        nextChart() {
+            this.$emit('next-chart')
         }
     }
 }
 </script>
 <style>
 #config-chart {
-    background: white;
+    background: black;
     position: fixed;
     bottom: 0;
     right: 0;
+    font-size: 30px;
+    color: red;
 }
 .config-title {
     text-align: center;
@@ -123,5 +127,16 @@ label {
     margin-left: auto;
     margin-right: auto;
     width: 30%;
+}
+
+.next-btn {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
 }
 </style>
