@@ -59,6 +59,12 @@ export default () => ({
             "slug": "DOTBTC",
             "base_id": 17,
             "quote_id": 14
+        },
+        {
+            "id": 41,
+            "slug": "LTCBTC",
+            "base_id": 15,
+            "quote_id": 14
         }
     ],
     intervals: {
