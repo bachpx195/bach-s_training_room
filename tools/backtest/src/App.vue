@@ -38,6 +38,7 @@
             @select-date="onSelectDate"
             @async-candlestick-data="asyncCandlestickData"
             @next-chart="nextChart"
+            @back-chart="backChart"
         >
         </config-chart>
     </div>
@@ -82,7 +83,8 @@ export default {
             height: window.innerHeight,
             colors: {},
             configSelected: {
-                merchandiseId: this.$store.state.merchandises[3].id,
+                // TODO: chọn cặp hiển thị default
+                merchandiseId: this.$store.state.merchandises[1].id,
                 intervalType: this.$store.state.intervals.m15
             },
             merchandiseRateSelected: {
@@ -192,11 +194,23 @@ export default {
             this.setNextChartDate(2)
             this.setNextChartDate(3)
         },
+        backChart() {
+            this.setBackChartDate(1)
+            this.setBackChartDate(2)
+            this.setBackChartDate(3)
+        },
         setNextChartDate(number) {
+            if(this[`chartFuture${number}`].length == 0) return
             this[`dataReady${number}`] = false
-            this[`chart${number}`] = [...this[`chart${number}`], this[`chartFuture${number}`][0]]
+            this[`chart${number}`].push(this[`chartFuture${number}`].shift())
             this.chartData(number)
-            this[`chartFuture${number}`].shift()
+            this[`dataReady${number}`] = true
+            this.setCurrentTime()
+        },
+        setBackChartDate(number) {
+            this[`dataReady${number}`] = _.stubFalse()
+            this[`chartFuture${number}`].unshift(this[`chart${number}`].pop())
+            this.chartData(number)
             this[`dataReady${number}`] = true
             this.setCurrentTime()
         },

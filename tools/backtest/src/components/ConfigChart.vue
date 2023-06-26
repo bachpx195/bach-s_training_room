@@ -31,6 +31,9 @@
         </div>
         <br>
         <div class="config-select">
+            <button class="next-btn" @click="backChart">
+                Back
+            </button>
             <button class="next-btn" @click="nextChart">
                 Next
             </button>
@@ -102,6 +105,9 @@ export default {
         },
         nextChart() {
             this.$emit('next-chart')
+        },
+        backChart() {
+            this.$emit('back-chart')
         }
     }
 }
