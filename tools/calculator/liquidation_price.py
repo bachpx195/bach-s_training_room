@@ -7,14 +7,11 @@ maint_lookup_table = [
 ]
 
 def liq_balance(wallet_balance, total, entry_price):
-    for max_position, maint_margin_rate_pct, maint_amount in maint_lookup_table:
-        quantity = total/entry_price
-        maint_margin_rate = maint_margin_rate_pct / 100
-        liq_price = (wallet_balance + maint_amount - total) / \
-            (abs(quantity) * (maint_margin_rate - (1 if quantity >= 0 else -1)))
-        base_balance = liq_price * abs(quantity )
-        if base_balance <= max_position:
-            break
+    quantity = total/entry_price
+    maint_margin_rate = 0.4 / 100
+    liq_price = (wallet_balance + 0 - total) / \
+        (abs(quantity) * (maint_margin_rate - (1 if quantity >= 0 else -1)))
+
     return round(liq_price*standard_error_of_mean, 2)
 
 
