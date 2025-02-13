@@ -76,7 +76,7 @@ export default {
             return merchandise
         },
         currentDateFormat() {
-            return moment(this.currentTime).zone('+0700').format("YYYY-MM-DD HH:MM").toString()
+            return moment(this.currentTime).add(1, "hours").format("YYYY-MM-DD HH:MM").toString()
         }
     },
     methods: {
