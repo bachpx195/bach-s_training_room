@@ -1,20 +1,38 @@
 <template>
-    <div v-if="dataReady1">
+    <div v-if="dataReady1 && dataReady2 && dataReady3">
         <loading-screen v-if="isLoading"></loading-screen>
         <trading-vue :data="this.chartData(1)"
             :title-txt="this.title('main')"
-            :width="this.width"
-            :height="this.height - 100"
+            :width="this.width/2"
+            :height="this.height/2"
             :color-back="colors.colorBack"
             :color-grid="colors.colorGrid"
             :color-text="colors.colorText"
             id="main-trading-vue">
         </trading-vue>
+        <trading-vue :data="this.chartData(2)"
+            :title-txt="this.title('btc')"
+            :width="this.width/2"
+            :height="this.height/2"
+            :color-back="colors.colorBack"
+            :color-grid="colors.colorGrid"
+            :color-text="colors.colorText"
+            id="btc-trading-vue">
+        </trading-vue>
+        <trading-vue :data="this.chartData(3)"
+            :title-txt="this.title('cross')"
+            :width="this.width/2"
+            :height="this.height/2"
+            :color-back="colors.colorBack"
+            :color-grid="colors.colorGrid"
+            :color-text="colors.colorText"
+            id="alt-btc-trading-vue">
+        </trading-vue>
         <config-chart
-            :width="this.width"
-            :height="100"
+            :width="this.width/2"
+            :height="this.height/2"
             :selected="this.configSelected"
-            :current-time="this.currentDateFormat"
+            :current-time="this.currentTime"
             @select-merchandise="onSelectMerchandise"
             @select-interval="onSelectInterval"
             @select-date="onSelectDate"
@@ -53,19 +71,29 @@ export default {
         return {
             isLoading: false,
             dataReady1: false,
+            dataReady2: false,
+            dataReady3: false,
             chart1: [],
+            chart2: [],
+            chart3: [],
             chartFuture1: [],
+            chartFuture2: [],
+            chartFuture3: [],
             width: window.innerWidth,
             height: window.innerHeight,
             colors: {},
             configSelected: {
                 // TODO: chọn cặp hiển thị default
                 merchandiseId: this.$store.state.merchandises[1].id,
-                intervalType: this.$store.state.intervals.hour
+                intervalType: this.$store.state.intervals.m15
             },
             merchandiseRateSelected: {
                 // Cặp alt/usdt
-                mainId: null
+                mainId: null,
+                // Cặp btc/usdt
+                btcId: this.$store.state.merchandiseRates[0].id,
+                // Cặp chéo alt/btc
+                crossId: null
             },
             currentTime: null
         };
@@ -75,14 +103,25 @@ export default {
             const merchandise = _.find(this.$store.state.merchandiseRates, { base_id: this.configSelected.merchandiseId, quote_id: 13 });
             return merchandise
         },
-        currentDateFormat() {
-            return moment(this.currentTime).zone('+0700').format("YYYY-MM-DD HH:MM").toString()
-        }
+        findMerchandiseRateCross() {
+            const merchandise = _.find(this.$store.state.merchandiseRates, { base_id: this.configSelected.merchandiseId, quote_id: 14 });
+            return merchandise
+        },
     },
     methods: {
         title(chartName) {
             let merchandiseRate;
-            merchandiseRate = this.$store.state.merchandiseRates[0]
+            switch (chartName) {
+                case 'main':
+                    merchandiseRate = this.findMerchandiseRateMain
+                    break
+                case 'cross':
+                    merchandiseRate = this.findMerchandiseRateCross
+                    break
+                default:
+                    merchandiseRate = this.$store.state.merchandiseRates[0]
+                    break
+            }
 
             return `${merchandiseRate.slug} ${Const.MAP_INTERVAL[this.configSelected.intervalType]}`
         },
@@ -99,6 +138,8 @@ export default {
         },
         fetchChartData(date) {
             this.fetchChartDataByMerchandiseRate(1, this.merchandiseRateSelected.mainId, date)
+            this.fetchChartDataByMerchandiseRate(2, this.merchandiseRateSelected.btcId, date)
+            this.fetchChartDataByMerchandiseRate(3, this.merchandiseRateSelected.crossId, date)
         },
         fetchChartDataByMerchandiseRate(chartNumber, merchandiseId, date) {
             const params = {
@@ -134,11 +175,12 @@ export default {
         },
         updateMerchandiseRateSelected() {
             this.merchandiseRateSelected.mainId = this.findMerchandiseRateMain.id
+            this.merchandiseRateSelected.crossId = this.findMerchandiseRateCross.id
         },
         asyncCandlestickData() {
             this.isLoading = true
             const params = {
-                merchandise_rate_ids: [this.merchandiseRateSelected.mainId],
+                merchandise_rate_ids: [this.merchandiseRateSelected.mainId, this.merchandiseRateSelected.btcId, this.merchandiseRateSelected.crossId],
                 time_type: this.configSelected.intervalType
             }
             this.$store.dispatch('asyncCandlestickData', params).then(res => {
@@ -149,9 +191,13 @@ export default {
         },
         nextChart() {
             this.setNextChartDate(1)
+            this.setNextChartDate(2)
+            this.setNextChartDate(3)
         },
         backChart() {
             this.setBackChartDate(1)
+            this.setBackChartDate(2)
+            this.setBackChartDate(3)
         },
         setNextChartDate(number) {
             if(this[`chartFuture${number}`].length == 0) return

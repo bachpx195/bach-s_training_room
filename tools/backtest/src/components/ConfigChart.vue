@@ -2,35 +2,28 @@
 <template>
     <!-- Main component  -->
     <div id="config-chart" :style="style">
-        <p class="config-title">Backtest Tool ver1</p>
-        <div class="config-select">
-            <label for="select-coin">Select coin</label>
+        <div class="config-select" style="width: 30%">
+            {{ this.$props.currentTime }}
+        </div>
+        <div class="config-select" style="width: 10%">
             <select v-model="configSelected.merchandiseId" name="select-coin" class="form-control" @change="changeMerchandise">
                 <option v-for="mr in this.merchandiseList" :value="mr.id" :key="mr.id">
                     {{ mr.slug }}
                 </option>
             </select>
         </div>
-        <div class="config-select">
-            <label for="select-coin">Select interval</label>
+        <div class="config-select" style="width: 10%">
             <select v-model="configSelected.intervalType" name="select-coin" class="form-control" @change="changeInterval">
                 <option v-for="(value, key) in this.intervalList" :value="value" :key="value">
                     {{ key }}
                 </option>
             </select>
         </div>
-        <div class="config-select">
-            <label for="select-coin">Update data</label>
-            <button @click="asyncUpdateData">
-                Update
-            </button>
-        </div>
-        <div class="config-select">
-            <label for="select-coin">Select date</label>
+        <div class="config-select" style="width: 20%">
             <dropdown-datepicker :on-change="changeDate"></dropdown-datepicker>
         </div>
         <br>
-        <div class="config-select">
+        <div class="config-select" style="width: 20%">
             <button class="next-btn" @click="backChart">
                 Back
             </button>
@@ -38,9 +31,7 @@
                 Next
             </button>
         </div>
-        <div class="config-select">
-            {{ this.$props.currentTime }}
-        </div>
+        
     </div>
 </template>
 
@@ -69,6 +60,19 @@ export default {
       currentTime: {
           type: String
       }
+    },
+    mounted() {
+        if (typeof window !== 'undefined') {
+            document.addEventListener('keydown', (e) => {
+                if(e.key === 'ArrowDown') {
+                    this.backChart()
+                }
+                if(e.key === 'ArrowUp') {
+                    this.nextChart()
+                }
+                e.preventDefault();
+            })
+        }
     },
     data() {
         return {
@@ -115,7 +119,7 @@ export default {
 <style>
 #config-chart {
     background: black;
-    position: fixed;
+    display: flex;
     bottom: 0;
     right: 0;
     font-size: 20px;
@@ -125,7 +129,6 @@ export default {
     text-align: center;
 }
 .config-select {
-    display: block;
     margin: 0 auto;
     text-align: center;
 }
@@ -148,7 +151,6 @@ label {
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
   font-size: 16px;
 }
 </style>

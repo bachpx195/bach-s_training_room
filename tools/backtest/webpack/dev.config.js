@@ -4,7 +4,7 @@ const WWPlugin = require('./ww_plugin.js')
 const TerserPlugin = require('terser-webpack-plugin')
 const webpack = require('webpack')
 
-global.port = '8080'
+global.port = '8000'
 
 module.exports = (env, options) => ({
     entry: './src/main.js',
@@ -53,7 +53,7 @@ module.exports = (env, options) => ({
     devServer: {
         host: '0.0.0.0',
         onListening: function(server) {
-            const port = server.listeningApp.address().port
+            const port = 8000
             global.port = port
         },
         before(app){

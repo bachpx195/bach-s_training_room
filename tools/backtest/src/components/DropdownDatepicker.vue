@@ -63,10 +63,10 @@ export default {
     },
     data() {
         return {
-            minute: null, hour: null, day: null, month: null, year: null,
-            minutes: [null, 0, 15, 30, 45],
+            minute: 0, hour: 0, day: null, month: null, year: null,
+            minutes: [0, 15, 30, 45],
             minuteOptions: ['Minute', 0, 15, 30, 45],
-            hours: [null, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            hours: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
             hourOptions: ['Hour', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
             days: [],
             dayOptions: [],
