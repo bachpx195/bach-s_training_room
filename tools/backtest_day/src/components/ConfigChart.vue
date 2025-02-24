@@ -24,25 +24,6 @@
                 placeholder="Select Date"
                 :value="currentTime"
                 @selected="changeDate"/>
-            <!-- <select
-                name="select-hour"
-                class="form-control"
-                @change="changeDate"
-            >
-                <option v-for="(value, key) in listDate" :value="value" :key="key">
-                    {{ value }}
-                </option>
-            </select>     -->
-            <select
-                v-model="hour"
-                name="select-hour"
-                class="form-control"
-                @change="changeHour"
-            >
-                <option v-for="(value, key) in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" :value="value" :key="key">
-                    {{ value }}
-                </option>
-            </select>
         </div>
         <br>
         <div class="config-select" style="width: 10%">
@@ -145,11 +126,6 @@ export default {
         },
         backChart() {
             this.$emit('back-chart')
-        },
-        changeHour() {
-            let dateTime = moment(this.currentTime)
-            dateTime.set({h: this.hour})
-            this.$emit('select-date', dateTime)
         }
     }
 }

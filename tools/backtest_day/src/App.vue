@@ -66,7 +66,7 @@ export default {
             configSelected: {
                 // TODO: chọn cặp hiển thị default
                 merchandiseId: this.$store.state.merchandises[1].id,
-                intervalType: this.$store.state.intervals.hour
+                intervalType: this.$store.state.intervals.day
             },
             merchandiseRateSelected: {
                 // Cặp alt/usdt
@@ -232,7 +232,8 @@ export default {
         },
         getLastCandlestickInfo(time) {
             const params = {
-                id: this.datetimeIdMapping[`${time}`]
+                id: this.datetimeIdMapping[`${time}`],
+                type: "day"
             }
             this.$store.dispatch('getCandleStickInfoData', params).then(res => {
                 this.lastCandlestickInfo = res.data
@@ -241,8 +242,16 @@ export default {
         getDrawPoint(data){
             const lastTimestamp = this.getLastTimestamp(data)
             const currentDate = new Date(lastTimestamp)
-            const firstTimestamp = currentDate.setUTCHours(0,0,0,0)
-            const firstYesterdayTimestamp = firstTimestamp - (24*60*60*1000)
+            const weekDiff = currentDate.getDay()
+            let firstTimestamp;
+            if(weekDiff == 0) {
+                firstTimestamp = lastTimestamp - (24*60*60*1000)*6
+            }else {
+                firstTimestamp = lastTimestamp - (24*60*60*1000)*(weekDiff-1)
+            }
+            
+            
+            const firstLastWeekTimestamp = firstTimestamp - (24*60*60*1000)*7
 
 
             const dayData = _.filter(data, function (n) {
@@ -254,7 +263,7 @@ export default {
             });
 
             const yesterdayData = _.filter(data, function (n) {
-                return  n[0] >= firstYesterdayTimestamp & n[0] < firstTimestamp
+                return  n[0] >= firstLastWeekTimestamp & n[0] < firstTimestamp
             });
 
             const yesterdayHigh = _.max(_.map(yesterdayData, function(x) {return x[2]}))
@@ -265,13 +274,13 @@ export default {
                 [firstTimestamp, _.max(_.map(dayData, function(x) {return x[2]}))],
                 [lastTimestamp, _.min(_.map(dayData, function(x) {return x[3]}))],
                 // open line
-                [firstYesterdayTimestamp, openCandlestick[1]],
+                [firstLastWeekTimestamp, openCandlestick[1]],
                 [lastTimestamp, openCandlestick[1]],
                 // high line
-                [firstYesterdayTimestamp, yesterdayHigh],
+                [firstLastWeekTimestamp, yesterdayHigh],
                 [lastTimestamp, yesterdayHigh],
                 // low line
-                [firstYesterdayTimestamp, yesterdayLow],
+                [firstLastWeekTimestamp, yesterdayLow],
                 [lastTimestamp, yesterdayLow]
             ]
         }

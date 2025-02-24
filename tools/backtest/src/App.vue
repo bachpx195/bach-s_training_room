@@ -8,6 +8,8 @@
             :color-back="colors.colorBack"
             :color-grid="colors.colorGrid"
             :color-text="colors.colorText"
+            :toolbar="true"
+            :chart-config=" { DEFAULT_LEN: 1000 } "
             id="main-trading-vue">
         </trading-vue>
         <config-chart

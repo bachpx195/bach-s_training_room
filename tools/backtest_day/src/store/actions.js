@@ -5,7 +5,7 @@ import axios from "axios";
 
 const { API_ENDPOINT } = Const
 
-const getCommonOptions = context => {
+const getCommonOptions = () => {
   const headers = {}
   return { headers }
 }
@@ -94,7 +94,7 @@ export function getCandleStickData (context, payload) {
 
 export function getCandleStickInfoData(context, payload) {
   const endpoint = 'candlesticks'
-  return apiGet(context, `${endpoint}/${payload.id}/info`)
+  return apiGet(context, `${endpoint}/${payload.id}/info?info_type=${payload.type}`)
 }
 
 export function getMerchandiseData (context) {
