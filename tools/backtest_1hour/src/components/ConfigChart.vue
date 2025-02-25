@@ -49,25 +49,18 @@
         >
             {{ currentDateFormat }}
         </div>
-        <div class="config-select" style="width: 20%">
+        <div
+            class="config-select-date"
+            style="width: 20%"
+        >
             <datepicker
                 placeholder="Select Date"
                 :value="currentTime"
-                @selected="changeDate"/>
-            <select
-                v-model="date"
-                name="select-date"
-                class="form-control"
-                @change="changeOptionDate"
-            >
-                <option v-for="(value, key) in listDay" :value="value" :key="key">
-                    {{ value }}
-                </option>
-            </select>    
+                @selected="changeDate"/>  
             <select
                 v-model="hour"
                 name="select-hour"
-                class="form-control"
+                class="form-control select-date"
                 @change="changeHour"
             >
                 <option v-for="(value, key) in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" :value="value" :key="key">
@@ -75,7 +68,44 @@
                 </option>
             </select>
         </div>
-        <br>
+        <div
+            class="config-select-date"
+            style="width: 20%"
+        >
+            <select
+                v-model="configSelected.event"
+                name="select-event"
+                class="form-control select-date"
+                @change="changeEvent"
+            >
+                <option
+                    disabled
+                    selected
+                    :value="null"
+                >
+                    -- select event --
+                </option>
+                <option 
+                    v-for="(value, key) in listEvent"
+                    :key="key"
+                    :value="value[0]"
+                >
+                    {{ `${value[1]} - ${value[2]}` }}
+                </option>
+            </select>
+            <select
+                v-show="configSelected.event"
+                v-model="date"
+                name="select-date"
+                class="form-control select-date"
+                @change="changeOptionDate"
+            >
+                <option disabled selected :value="null"> -- select date -- </option>
+                <option v-for="(value, key) in listEventDay" :value="value" :key="key">
+                    {{ value }}
+                </option>
+            </select> 
+        </div>
         <div class="config-select" style="width: 10%">
             <button 
                 class="next-btn"
@@ -160,6 +190,14 @@ export default {
                 if(e.key === 'ArrowUp') {
                     this.nextChart()
                 }
+                if(e.key === 'ArrowRight') {
+                    console.log('ArrowRight')
+                    this.nextSeletedDate()
+                }
+                if(e.key === 'ArrowLeft') {
+                    console.log('ArrowLeft')
+                    this.backSeletedDate()
+                }
                 e.preventDefault();
             })
         }
@@ -172,8 +210,10 @@ export default {
             this.$emit('select-interval', this.configSelected.intervalType)
         },
         changeDate(e) {
-            console.log(e)
-            this.$emit('select-date', e)
+            this.hour = 7
+            let dateTime = moment(e)
+            dateTime.set({h: this.hour})
+            this.$emit('select-date', dateTime)
         },
         asyncUpdateData() {
             this.$emit('async-candlestick-data')
@@ -187,10 +227,14 @@ export default {
         changeHour() {
             let dateTime = moment(this.currentTime)
             dateTime.set({h: this.hour})
+            console.log("changeHour: ", dateTime)
             this.$emit('select-date', dateTime)
         },
         changeOptionDate() {
-            this.$emit('select-date', this.date)
+            this.hour = 7
+            let dateTime = moment(this.date)
+            dateTime.set({h: this.hour})
+            this.$emit('select-date', dateTime)
         },
         changeEvent() {
             const params = {
@@ -202,7 +246,30 @@ export default {
             this.$store.dispatch('getListDay', params).then(res => {
                 this.listEventDay = res.data                
             })
-        }
+        },
+        nextSeletedDate() {
+            if (this.configSelected.event && this.date && this.listEventDay) {
+                const index = this.listEventDay.indexOf(this.date)
+                if (index < this.listEventDay.length - 1) {
+                    this.date = this.listEventDay[index + 1]
+                    let dateTime = moment(this.date)
+                    dateTime.set({h: this.hour})
+                    this.$emit('select-date', dateTime)
+                }
+            }
+            
+        },
+        backSeletedDate() {
+            if (this.configSelected.event && this.date && this.listEventDay) {
+                const index = this.listEventDay.indexOf(this.date)
+                if (index > 1) {
+                    this.date = this.listEventDay[index - 1]
+                    let dateTime = moment(this.date)
+                    dateTime.set({h: this.hour})
+                    this.$emit('select-date', dateTime)
+                }
+            }
+        },
     }
 }
 </script>

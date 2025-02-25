@@ -5,7 +5,8 @@ import axios from "axios";
 
 const { API_ENDPOINT } = Const
 
-const getCommonOptions = () => {
+const getCommonOptions = (context) => {
+  console.log("context: ", context)
   const headers = {}
   return { headers }
 }
@@ -81,10 +82,21 @@ export async function apiDelete (context, url, options = {}) {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 const emptyPromise = () => {
   return new Promise((resolve, reject) => {
     resolve(null)
   })
+}
+
+export function getListDay(context, payload) {
+  const endpoint = 'event_dates'
+  return apiGet(context, `${endpoint}?event_id=${payload.event_id}&interval=${payload.time_type}&merchandise_rate_id=${payload.merchandise_rate_id}`)
+}
+
+export function getEvent(context, payload) {
+  const endpoint = 'event_dates/list_event'
+  return apiGet(context, `${endpoint}?merchandise_rate_id=${payload.merchandise_rate_id}`)
 }
 
 export function getCandleStickData (context, payload) {

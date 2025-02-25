@@ -22,7 +22,7 @@
         :color-back="colors.colorBack"
         :color-grid="colors.colorGrid"
         :color-text="colors.colorText"
-        :chart-config=" { DEFAULT_LEN: 1000 } "/>
+        :chart-config=" { DEFAULT_LEN: 100 } "/>
         <watch-list
             :info="lastCandlestickInfo"
             :current-time="currentTime"
@@ -127,7 +127,6 @@ export default {
                         name: 'Custom',
                         type: 'Custom',
                         data: customData,
-                        settings: {}
                     }],
                     "tools": [
                         {
@@ -154,7 +153,10 @@ export default {
             })
         },
         fetchEvents() {
-            this.$store.dispatch('getEvent').then(res => {
+            const params = {
+                merchandise_rate_id: 35,
+            }
+            this.$store.dispatch('getEvent', params).then(res => {
                 this.listEvent = res.data                
             })
         },
@@ -171,7 +173,7 @@ export default {
             this.fetchChartData()
         },
         onSelectDate(date) {
-            bus.$emit('select-date', date)
+            // bus.$emit('select-date', date)
             const dateParam = moment(date).format()
 
             const params = {
@@ -187,8 +189,6 @@ export default {
                 let dateTimestamp = this.setCurrentTime()
                 this.getLastCandlestickInfo(dateTimestamp)
             })
-
-            // this.fetchChartDataByMerchandiseRate(dateParam)
         },
         updateMerchandiseRateSelected() {
             this.merchandiseRateSelected.mainId = this.findMerchandiseRateMain.id

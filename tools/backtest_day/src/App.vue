@@ -5,6 +5,7 @@
         :height="50"
         :selected="configSelected"
         :current-time="currentTime"
+        :list-event="listEvent"
         @select-merchandise="onSelectMerchandise"
         @select-interval="onSelectInterval"
         @select-date="onSelectDate"
@@ -20,7 +21,8 @@
         :timezone="7"
         :color-back="colors.colorBack"
         :color-grid="colors.colorGrid"
-        :color-text="colors.colorText"/>
+        :color-text="colors.colorText"
+        :chart-config=" { DEFAULT_LEN: 100 } "/>
         <watch-list
             :info="lastCandlestickInfo"
             :current-time="currentTime"
@@ -29,7 +31,7 @@
     </div>
 </div>
 <div v-else>
-    <loading-screen ></loading-screen>
+    <loading-screen />
 </div>
 </template>
 
@@ -58,6 +60,7 @@ export default {
             lastCandlestickInfo: null,
             width: window.innerWidth,
             height: window.innerHeight,
+            listEvent: [],
             colors: {
                 // colorBack: '#fff',
                 // colorGrid: '#eee',
@@ -86,6 +89,7 @@ export default {
     },
     created() {
         this.fetchChartData(null)
+        this.fetchEvents()
     },
     mounted() {
         window.addEventListener('resize', this.onResize)
@@ -147,6 +151,15 @@ export default {
                 this.loading = false
                 let dateTimestamp = this.setCurrentTime()
                 this.getLastCandlestickInfo(dateTimestamp)
+            })
+        },
+        fetchEvents() {
+            const params = {
+                merchandise_rate_id: 35
+            }
+
+            this.$store.dispatch('getEvent', params).then(res => {
+                this.listEvent = res.data                
             })
         },
         onSelectMerchandise(merchandiseSelected) {

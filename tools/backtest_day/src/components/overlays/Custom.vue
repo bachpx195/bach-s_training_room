@@ -66,7 +66,10 @@ export default {
             const highLinePoint2 = this.$props.data[5]
             const lowLinePoint1 = this.$props.data[6]
             const lowLinePoint2 = this.$props.data[7]
-            
+            if(!p1 & !p2) {
+                return
+            }
+
             const layout = this.$props.layout
 
             ctx.lineWidth = this.line_width

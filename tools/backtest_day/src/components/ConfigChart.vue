@@ -1,32 +1,106 @@
 
 <template>
     <!-- Main component  -->
-    <div id="config-chart" :style="style">
-        <div class="config-select" style="width: 10%">
-            <select v-model="configSelected.merchandiseId" name="select-coin" class="form-control" @change="changeMerchandise">
-                <option v-for="mr in merchandiseList" :value="mr.id" :key="mr.id">
+    <div 
+        id="config-chart"
+        :style="style"
+    >
+        <div 
+            class="config-select"
+            style="width: 10%"
+        >
+            <select 
+                v-model="configSelected.merchandiseId"
+                name="select-coin"
+                class="form-control select-date"
+                @change="changeMerchandise"
+            >
+                <option 
+                    v-for="mr in merchandiseList" 
+                    :key="mr.id" 
+                    :value="mr.id"
+                >
                     {{ mr.slug }}
                 </option>
             </select>
         </div>
-        <div class="config-select" style="width: 10%">
-            <select v-model="configSelected.intervalType" name="select-coin" class="form-control" @change="changeInterval">
-                <option v-for="(value, key) in intervalList" :value="value" :key="value">
+        <div 
+            class="config-select"
+            style="width: 10%"
+        >
+            <select
+                v-model="configSelected.intervalType"
+                name="select-interval"
+                class="form-control select-date"
+                @change="changeInterval"
+            >
+                <option
+                    v-for="(value, key) in intervalList"
+                    :key="value"
+                    :value="value"
+                >
                     {{ key }}
                 </option>
             </select>
         </div>
-        <div class="config-select" style="width: 10%">
+        <div 
+            class="config-select"
+            style="width: 10%"
+        >
             {{ currentDateFormat }}
         </div>
-        <div class="config-select" style="width: 20%">
+        <div
+            class="config-select"
+            style="width: 20%"
+        >
             <datepicker
                 placeholder="Select Date"
                 :value="currentTime"
-                @selected="changeDate"/>
+                @selected="changeDate"
+            />
         </div>
-        <br>
-        <div class="config-select" style="width: 10%">
+        <div
+            class="config-select-date"
+            style="width: 20%"
+        >
+            <select
+                v-model="configSelected.event"
+                name="select-event"
+                class="form-control select-date"
+                @change="changeEvent"
+            >
+                <option
+                    disabled
+                    selected
+                    :value="null"
+                >
+                    -- select event --
+                </option>
+                <option 
+                    v-for="(value, key) in listEvent"
+                    :key="key"
+                    :value="value[0]"
+                >
+                    {{ `${value[1]} - ${value[2]}` }}
+                </option>
+            </select>
+            <select
+                v-show="configSelected.event"
+                v-model="date"
+                name="select-date"
+                class="form-control select-date"
+                @change="changeOptionDate"
+            >
+                <option disabled selected :value="null"> -- select date -- </option>
+                <option v-for="(value, key) in listEventDay" :value="value" :key="key">
+                    {{ value }}
+                </option>
+            </select> 
+        </div>
+        <div 
+            class="config-select"
+            style="width: 10%"
+        >
             <button 
                 class="next-btn"
                 @click="backChart"
@@ -46,7 +120,6 @@
 <script>
 
 import Datepicker from "vuejs-datepicker/dist/vuejs-datepicker.esm.js";
-import _ from "lodash"
 import moment from 'moment'
 import dateConst from "../stuff/list_date_constants.js"
 
@@ -70,6 +143,10 @@ export default {
       // eslint-disable-next-line vue/require-default-prop
       currentTime: {
           type: String
+      },
+      // eslint-disable-next-line vue/require-default-prop
+      listEvent: {
+        type: Array
       }
     },
     data() {
@@ -80,8 +157,10 @@ export default {
             configSelected: {
                 merchandiseId: this.$props.selected.merchandiseId,
                 intervalType: this.$props.selected.intervalType,
+                event: null,
             },
-            hour: _.toNumber(moment(this.currentTime).format("HH"))
+            listEventDay: [],
+            date: null,
         }
     },
     computed: {
@@ -126,6 +205,22 @@ export default {
         },
         backChart() {
             this.$emit('back-chart')
+        },
+        changeOptionDate() {
+            let dateTime = new Date(this.date)
+            console.log("this.date: ", dateTime)
+            this.$emit('select-date', dateTime)
+        },
+        changeEvent() {
+            const params = {
+                merchandise_rate_id: 35,
+                time_type: this.configSelected.intervalType,
+                event_id: this.configSelected.event
+            }
+
+            this.$store.dispatch('getListDay', params).then(res => {
+                this.listEventDay = res.data                
+            })
         }
     }
 }
@@ -168,5 +263,10 @@ label {
   text-align: center;
   text-decoration: none;
   font-size: 16px;
+}
+
+.select-date {
+    height: 24px;
+    display: block;
 }
 </style>

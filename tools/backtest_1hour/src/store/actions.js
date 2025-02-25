@@ -88,9 +88,9 @@ export async function apiDelete (context, url, options = {}) {
 //   })
 // }
 
-export function getEvent(context) {
+export function getEvent(context, payload) {
   const endpoint = 'event_dates/list_event'
-  return apiGet(context, `${endpoint}?`)
+  return apiGet(context, `${endpoint}?merchandise_rate_id=${payload.merchandise_rate_id}`)
 }
 
 export function getListDay(context, payload) {
