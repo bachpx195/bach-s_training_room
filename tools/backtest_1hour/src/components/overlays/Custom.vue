@@ -58,7 +58,6 @@ export default {
             return { author: 'C451', version: '2.0.1' }
         },
         draw(ctx) {
-            console.log("p1", this.$props.data)
             const p1 = this.$props.data[0]
             const p2 = this.$props.data[1]
             const openLinePoint1 = this.$props.data[2]

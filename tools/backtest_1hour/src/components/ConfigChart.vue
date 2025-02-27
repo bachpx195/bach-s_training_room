@@ -191,12 +191,13 @@ export default {
                     this.nextChart()
                 }
                 if(e.key === 'ArrowRight') {
-                    console.log('ArrowRight')
                     this.nextSeletedDate()
                 }
                 if(e.key === 'ArrowLeft') {
-                    console.log('ArrowLeft')
                     this.backSeletedDate()
+                }
+                if(e.key === 'Enter') {
+                    this.changeDate(this.currentTime)
                 }
                 e.preventDefault();
             })

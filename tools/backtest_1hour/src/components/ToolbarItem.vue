@@ -59,7 +59,6 @@ export default {
             if (this.show_exp_list) e.stopPropagation()
         },
         emit_selected(src) {
-            console.log("afafdsa")
             if (Utils.now() - this.click_start >
                 this.config.TB_ICON_HOLD) return
             clearTimeout(this.click_id)
