@@ -45,7 +45,7 @@
         </tbody>
       </table>
       <h1>{{ currentDateFormat('dddd') }}</h1>
-      <h1>{{ currentDateFormat('HH') }}</h1>
+      <h1>{{ currentDateFormat('D-M') }}</h1>
       <h2 :class="`${info.return_oc > 0 ? 'green' : 'red'}`">ReturnOC: {{ info.return_oc }} </h2>
       <h2>ReturnHL: {{ info.return_hl }}</h2>
     </div>

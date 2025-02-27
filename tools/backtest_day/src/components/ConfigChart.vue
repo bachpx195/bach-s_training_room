@@ -183,6 +183,16 @@ export default {
                 if(e.key === 'ArrowUp') {
                     this.nextChart()
                 }
+                if(e.key === 'ArrowRight') {
+                    this.nextSeletedDate()
+                }
+                if(e.key === 'ArrowLeft') {
+                    this.backSeletedDate()
+                }
+                if(e.key === 'Enter') {
+                    let dateTime = new Date(this.currentTime)
+                    this.changeDate(dateTime)
+                }
                 e.preventDefault();
             })
         }
@@ -208,7 +218,6 @@ export default {
         },
         changeOptionDate() {
             let dateTime = new Date(this.date)
-            console.log("this.date: ", dateTime)
             this.$emit('select-date', dateTime)
         },
         changeEvent() {
@@ -221,6 +230,27 @@ export default {
             this.$store.dispatch('getListDay', params).then(res => {
                 this.listEventDay = res.data                
             })
+        },
+        nextSeletedDate() {
+            if (this.configSelected.event && this.date && this.listEventDay) {
+                const index = this.listEventDay.indexOf(this.date)
+                if (index < this.listEventDay.length - 1) {
+                    this.date = this.listEventDay[index + 1]
+                    let dateTime = new Date(this.date)
+                    this.$emit('select-date', dateTime)
+                }
+            }
+            
+        },
+        backSeletedDate() {
+            if (this.configSelected.event && this.date && this.listEventDay) {
+                const index = this.listEventDay.indexOf(this.date)
+                if (index > 1) {
+                    this.date = this.listEventDay[index - 1]
+                    let dateTime = new Date(this.date)
+                    this.$emit('select-date', dateTime)
+                }
+            }
         }
     }
 }
