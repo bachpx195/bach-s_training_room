@@ -10,17 +10,21 @@ export default () => ({
             "id": 15,
             "slug": "LTC"
         },
+        // {
+        //     "id": 16,
+        //     "slug": "BAT"
+        // },
+        // {
+        //     "id": 17,
+        //     "slug": "DOT"
+        // },
+        // {
+        //     "id": 18,
+        //     "slug": "XRP"
+        // },
         {
-            "id": 16,
-            "slug": "BAT"
-        },
-        {
-            "id": 17,
-            "slug": "DOT"
-        },
-        {
-            "id": 18,
-            "slug": "XRP"
+            "id": 19,
+            "slug": "LINK"
         },
     ],
     merchandiseRates: [
@@ -65,7 +69,13 @@ export default () => ({
             "slug": "LTCBTC",
             "base_id": 15,
             "quote_id": 14
-        }
+        },
+        {
+        "id": 42,
+            "slug": "LINKUSDT",
+            "base_id": 19,
+            "quote_id": 13
+        },
     ],
     intervals: {
         "day": 1,

@@ -73,7 +73,7 @@ export default {
             },
             merchandiseRateSelected: {
                 // Cặp alt/usdt
-                mainId: null
+                mainId: 35
             },
             currentTime: null
         };
@@ -113,7 +113,7 @@ export default {
         },
         fetchChartDataByMerchandiseRate(date) {
             const params = {
-                merchandise_rate_id: 35,
+                merchandise_rate_id: this.merchandiseRateSelected.mainId,
                 time_type: this.configSelected.intervalType,
                 date: date
             }
@@ -155,7 +155,7 @@ export default {
         },
         fetchEvents() {
             const params = {
-                merchandise_rate_id: 35
+                merchandise_rate_id: this.merchandiseRateSelected.mainId
             }
 
             this.$store.dispatch('getEvent', params).then(res => {
@@ -163,13 +163,11 @@ export default {
             })
         },
         onSelectMerchandise(merchandiseSelected) {
-            bus.$emit('select-merchandise', merchandiseSelected)
             this.configSelected.merchandiseId = merchandiseSelected
             this.updateMerchandiseRateSelected()
             this.fetchChartData()
         },
         onSelectInterval(intervalSelected) {
-            bus.$emit('select-interval', intervalSelected)
             this.configSelected.intervalType = intervalSelected
             this.updateMerchandiseRateSelected()
             this.fetchChartData()
@@ -179,7 +177,7 @@ export default {
             const dateParam = moment(date).format()
 
             const params = {
-                merchandise_rate_id: 35,
+                merchandise_rate_id: this.merchandiseRateSelected.mainId,
                 time_type: this.configSelected.intervalType,
                 date: dateParam
             }
