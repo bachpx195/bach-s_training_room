@@ -102,8 +102,8 @@ export default {
             let h = this.$props.values.ohlcv[2]
             let l = this.$props.values.ohlcv[3]
             let c = this.$props.values.ohlcv[4]
-            let retrun_oc = (c-o)*100/o
-            let retrun_hl = (h-l)*100/l
+            let retrun_oc = (o - c)*100/o
+            let retrun_hl = (h - l)*100/l
 
             return [
                 o.toFixed(prec),
