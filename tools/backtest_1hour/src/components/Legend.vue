@@ -1,50 +1,74 @@
+<!-- eslint-disable vue/require-v-for-key -->
+<!-- eslint-disable vue/no-use-v-if-with-v-for -->
 <template>
-<div class="trading-vue-legend"
-     v-bind:style="calc_style">
-    <div v-if="grid_id === 0"
+<div 
+    class="trading-vue-legend"
+    :style="calc_style"
+>
+    <div
+        v-if="grid_id === 0"
          class="trading-vue-ohlcv"
-        :style = "{ 'max-width': common.width + 'px' }">
-        <span class="t-vue-title"
-             :style="{ color: common.colors.title }">
-              {{common.title_txt}}
+        :style="{ 'max-width': common.width + 'px' }"
+    >
+        <span
+            class="t-vue-title"
+            :style="{ color: common.colors.title }"
+        >
+              {{ common.title_txt }}
         </span>
         <span v-if="show_values">
-            O<span class="t-vue-lspan" >{{ohlcv[0]}}</span>
-            H<span class="t-vue-lspan" >{{ohlcv[1]}}</span>
-            L<span class="t-vue-lspan" >{{ohlcv[2]}}</span>
-            C<span class="t-vue-lspan" >{{ohlcv[3]}}</span>
-            V<span class="t-vue-lspan" >{{ohlcv[4]}}</span>
+            O<span class="t-vue-lspan">{{ ohlcv[0] }}</span>
+            H<span class="t-vue-lspan">{{ ohlcv[1] }}</span>
+            L<span class="t-vue-lspan">{{ ohlcv[2] }}</span>
+            C<span class="t-vue-lspan">{{ ohlcv[3] }}</span>
+            V<span class="t-vue-lspan">{{ ohlcv[4] }}</span>
+            return_oc<span class="t-vue-lspan">{{ ohlcv[5] }}</span>
+            return_hl<span class="t-vue-lspan">{{ ohlcv[6] }}</span>
         </span>
-        <span v-if="!show_values" class="t-vue-lspan"
-            :style="{color: common.colors.text}">
-            {{(common.meta.last || [])[4]}}
+        <span 
+            v-if="!show_values"
+            class="t-vue-lspan"
+            :style="{color: common.colors.text}"
+        >
+            {{ (common.meta.last || [])[4] }}
         </span>
     </div>
-    <div class="t-vue-ind" v-for="ind in this.indicators">
-        <span class="t-vue-iname">{{ind.name}}</span>
+   
+    <div
+        v-for="ind in this.indicators"
+        class="t-vue-ind"
+    >
+        <span class="t-vue-iname">{{ ind.name }}</span>
         <button-group
-            v-bind:buttons="common.buttons"
-            v-bind:config="common.config"
-            v-bind:ov_id="ind.id"
-            v-bind:grid_id="grid_id"
-            v-bind:index="ind.index"
-            v-bind:tv_id="common.tv_id"
-            v-bind:display="ind.v"
-            v-on:legend-button-click="button_click">
-        </button-group>
-        <span class="t-vue-ivalues" v-if="ind.v">
-            <span class="t-vue-lspan t-vue-ivalue"
+            :buttons="common.buttons"
+            :config="common.config"
+            :ov_id="ind.id"
+            :grid_id="grid_id"
+            :index="ind.index"
+            :tv_id="common.tv_id"
+            :display="ind.v"
+            @legend-button-click="button_click"/>
+        <span
+            v-if="ind.v"
+            class="t-vue-ivalues"
+        >
+            <span 
                 v-if="show_values"
-                v-for="v in ind.values" :style="{ color: v.color }">
-                {{v.value}}
+                v-for="v in ind.values"
+                class="t-vue-lspan t-vue-ivalue" 
+                :style="{ color: v.color }"
+            >
+                {{ v.value }}
             </span>
         </span>
         <span v-if="ind.unk" class="t-vue-unknown">
             (Unknown type)
         </span>
         <transition name="tvjs-appear">
-            <spinner :colors="common.colors" v-if="ind.loading">
-            </spinner>
+            <spinner 
+                v-if="ind.loading"
+                :colors="common.colors"
+            />
         </transition>
     </div>
 </div>
@@ -56,10 +80,10 @@ import Spinner from './Spinner.vue'
 
 export default {
     name: 'ChartLegend',
+    components: { ButtonGroup, Spinner },
     props: [
         'common', 'values', 'grid_id', 'meta_props'
     ],
-    components: { ButtonGroup, Spinner },
     computed: {
         ohlcv() {
             if (!this.$props.values || !this.$props.values.ohlcv) {
@@ -74,14 +98,23 @@ export default {
                 return (meta.legend() || []).map(x => x.value)
             }
 
+            let o = this.$props.values.ohlcv[1]
+            let h = this.$props.values.ohlcv[2]
+            let l = this.$props.values.ohlcv[3]
+            let c = this.$props.values.ohlcv[4]
+            let retrun_oc = (c-o)*100/o
+            let retrun_hl = (h-l)*100/l
+
             return [
-                this.$props.values.ohlcv[1].toFixed(prec),
-                this.$props.values.ohlcv[2].toFixed(prec),
-                this.$props.values.ohlcv[3].toFixed(prec),
-                this.$props.values.ohlcv[4].toFixed(prec),
+                o.toFixed(prec),
+                h.toFixed(prec),
+                l.toFixed(prec),
+                c.toFixed(prec),
                 this.$props.values.ohlcv[5] ?
                     this.$props.values.ohlcv[5].toFixed(2):
-                    'n/a'
+                    'n/a',
+                retrun_oc.toFixed(prec),
+                retrun_hl.toFixed(prec),
             ]
         },
         // TODO: add support for { grid: { id : N }}

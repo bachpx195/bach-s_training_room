@@ -159,7 +159,7 @@ export default {
     },
     computed: {
         style() {
-            return 'width: ' + this.$props.width + 'px; height: ' + this.$props.height + 'px'
+            return 'width: ' + this.$props.width + 'px;'
         },
         currentDateFormat() {
             return moment(this.currentTime).format("YYYY-MM-DD HH:MM dddd").toString()

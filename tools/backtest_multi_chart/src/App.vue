@@ -46,14 +46,8 @@
             :chart-config=" { DEFAULT_LEN: 100 } "/>
         </div>
         <div class="config-container" :style="configStyle">
-            <watch-list
-                :info="lastCandlestickInfo"
-                :current-time="currentTime"
-                :width="width/2"
-                :height="height/4"/>
             <config-chart
                 :width="width/2"
-                :height="height/4"
                 :selected="configSelected"
                 :current-time="currentTime"
                 :list-event="listEvent"
@@ -63,6 +57,11 @@
                 @async-candlestick-data="asyncCandlestickData"
                 @next-chart="nextChart"
                 @back-chart="backChart" />
+            <watch-list
+                :info="lastCandlestickInfo"
+                :current-time="currentTime"
+                :width="width/2"/>
+            
         </div>
     </div>
 </div>

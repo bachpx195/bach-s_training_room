@@ -82,7 +82,7 @@ export default {
     },
     computed: {
         style() {
-            return 'width: ' + this.$props.width + 'px; height: ' + this.$props.height + 'px'
+            return 'width: ' + this.$props.width + 'px;'
         },
         
     },
