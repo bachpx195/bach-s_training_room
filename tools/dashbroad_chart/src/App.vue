@@ -4,16 +4,10 @@
             :width="width"
             :height="50"
             :selected="configSelected"
-            :list-event="listEvent"
             @select-merchandise="onSelectMerchandise"
-            @back-chart="backChart" />
+            @select-day-number="onSelectDayNumber" />
         <div class="main-container">
-            <bar-chart />
-            <watch-list
-                :info="lastCandlestickInfo"
-                :current-time="currentTime"
-                :width="200"
-                :height="height - 50" />
+            <bar-chart v-if="!loading" :bar-data="barData" />
         </div>
     </div>
 </template>
@@ -21,29 +15,25 @@
 <script>
 
 import ConfigChart from './components/ConfigChart.vue'
-import WatchList from './components/WatchList.vue'
 import BarChart from './BarChart.vue'
 
 
 import _ from "lodash"
-// import Const from "./stuff/constants.js"
-import moment from 'moment'
 
 export default {
     name: 'app',
     components: {
-        ConfigChart, BarChart, WatchList
+        ConfigChart, BarChart
     },
     data() {
         return {
-            chart: null,
+            barData: {
+                labels: [],
+                datasets: [],
+            },
             loading: true,
-            chartFuture: [],
-            datetimeIdMapping: null,
-            lastCandlestickInfo: null,
             width: window.innerWidth,
             height: window.innerHeight,
-            listEvent: [],
             colors: {
                 // colorBack: '#fff',
                 // colorGrid: '#eee',
@@ -67,8 +57,7 @@ export default {
         }
     },
     created() {
-        this.fetchChartData(null)
-        this.fetchEvents()
+        this.getEffectHourCandlestickTypeInDay()
     },
     mounted() {
         window.addEventListener('resize', this.onResize)
@@ -82,25 +71,43 @@ export default {
             this.width = window.innerWidth
             this.height = window.innerHeight
         },
-        fetchEvents() {
-            const params = {
-                merchandise_rate_id: this.merchandiseRateSelected.mainId
-            }
-
-            this.$store.dispatch('getEvent', params).then(res => {
-                this.listEvent = res.data                
-            })
-        },
         onSelectMerchandise(merchandiseSelected) {
             this.configSelected.merchandiseId = merchandiseSelected
-            this.updateMerchandiseRateSelected()
+            this.loading = true
+            this.getEffectHourCandlestickTypeInDay()
         },
-        onSelectInterval(intervalSelected) {
-            this.configSelected.intervalType = intervalSelected
-            this.updateMerchandiseRateSelected()
+        onSelectDayNumber(dayNumber) {
+            this.configSelected.dayNumber = dayNumber
+            this.loading = true
+            this.getEffectHourCandlestickTypeInDay()
         },
         updateMerchandiseRateSelected() {
             this.merchandiseRateSelected.mainId = this.findMerchandiseRateMain.id
+        },
+        getEffectHourCandlestickTypeInDay() {
+            const params = {
+                merchandise_rate_id: this.merchandiseRateSelected.mainId,
+                day_number: this.configSelected.dayNumber
+            }
+            this.$store.dispatch('getEffectHourCandlestickTypeInDay', params).then(res => {
+                let increaseDatasets = [];
+                let decreaseDatasets = [];
+                this.barData.labels = _.keys(res.data)
+                _.each(this.barData.labels, function (key) {
+                    increaseDatasets.push(res.data[key][0])
+                    decreaseDatasets.push(res.data[key][1])
+                })
+                this.barData.datasets = [{
+                    label: "Tang",
+                    data: increaseDatasets,
+                    backgroundColor: 'rgb(75, 192, 192)',
+                },{
+                    label: "GIam",
+                    data: decreaseDatasets,
+                    backgroundColor: 'rgb(255, 99, 132)',
+                }]
+                this.loading = false
+            })
         }
     }
 };

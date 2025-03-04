@@ -99,6 +99,11 @@ export function getEvent(context, payload) {
   return apiGet(context, `${endpoint}?merchandise_rate_id=${payload.merchandise_rate_id}`)
 }
 
+export function getEffectHourCandlestickTypeInDay(context, payload) {
+  const endpoint = 'charts/effect_hour_candlestick_type_in_day'
+  return apiGet(context, `${endpoint}?merchandise_rate_id=${payload.merchandise_rate_id}&day_number=${payload.day_number}`)
+}
+
 export function getCandleStickData (context, payload) {
   const endpoint = 'candlesticks'
   return apiGet(context, `${endpoint}/${buildQueryString(payload)}`)

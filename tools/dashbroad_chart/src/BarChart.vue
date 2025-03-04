@@ -2,7 +2,7 @@
   <Bar
     id="my-chart-id"
     :options="chartOptions"
-    :data="chartData"
+    :data="barData"
   />
 </template>
 
@@ -15,14 +15,30 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 export default {
   name: 'BarChart',
   components: { Bar },
+  props: {
+      // eslint-disable-next-line vue/require-default-prop
+    barData: {
+        type: Object
+    }
+  },
   data() {
     return {
-      chartData: {
-        labels: [ 'January', 'February', 'March' ],
-        datasets: [ { data: [40, 20, 12] } ]
-      },
       chartOptions: {
-        responsive: true
+        plugins: {
+          title: {
+            display: true,
+            text: 'Chart.js Bar Chart - Stacked'
+          },
+        },
+        responsive: true,
+        scales: {
+          x: {
+            stacked: true,
+          },
+          y: {
+            stacked: true
+          }
+        }
       }
     }
   }

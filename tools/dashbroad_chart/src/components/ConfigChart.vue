@@ -89,57 +89,9 @@ export default {
         changeMerchandise () {
             this.$emit('select-merchandise', this.configSelected.merchandiseId)
         },
-        changeInterval() {
-            this.$emit('select-interval', this.configSelected.intervalType)
+        changeDayNumber() {
+            this.$emit('select-day-number', this.configSelected.dayNumber)
         },
-        changeDate(e) {
-            this.$emit('select-date', e)
-        },
-        asyncUpdateData() {
-            this.$emit('async-candlestick-data')
-        },
-        nextChart() {
-            this.$emit('next-chart')
-        },
-        backChart() {
-            this.$emit('back-chart')
-        },
-        changeOptionDate() {
-            let dateTime = new Date(this.date)
-            this.$emit('select-date', dateTime)
-        },
-        changeEvent() {
-            const params = {
-                merchandise_rate_id: 35,
-                time_type: this.configSelected.intervalType,
-                event_id: this.configSelected.event
-            }
-
-            this.$store.dispatch('getListDay', params).then(res => {
-                this.listEventDay = res.data                
-            })
-        },
-        nextSeletedDate() {
-            if (this.configSelected.event && this.date && this.listEventDay) {
-                const index = this.listEventDay.indexOf(this.date)
-                if (index < this.listEventDay.length - 1) {
-                    this.date = this.listEventDay[index + 1]
-                    let dateTime = new Date(this.date)
-                    this.$emit('select-date', dateTime)
-                }
-            }
-            
-        },
-        backSeletedDate() {
-            if (this.configSelected.event && this.date && this.listEventDay) {
-                const index = this.listEventDay.indexOf(this.date)
-                if (index > 1) {
-                    this.date = this.listEventDay[index - 1]
-                    let dateTime = new Date(this.date)
-                    this.$emit('select-date', dateTime)
-                }
-            }
-        }
     }
 }
 </script>
