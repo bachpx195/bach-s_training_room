@@ -104,6 +104,11 @@ export function getEffectHourCandlestickTypeInDay(context, payload) {
   return apiGet(context, `${endpoint}?merchandise_rate_id=${payload.merchandise_rate_id}&day_number=${payload.day_number}`)
 }
 
+export function getHighestReturnHourInDay(context, payload) {
+  const endpoint = 'charts/highest_return_hour_in_day'
+  return apiGet(context, `${endpoint}?merchandise_rate_id=${payload.merchandise_rate_id}&day_number=${payload.day_number}`)
+}
+
 export function getCandleStickData (context, payload) {
   const endpoint = 'candlesticks'
   return apiGet(context, `${endpoint}/${buildQueryString(payload)}`)

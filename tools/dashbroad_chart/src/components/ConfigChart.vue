@@ -40,7 +40,6 @@
 
 <script>
 
-import moment from 'moment'
 import dateConst from "../stuff/list_date_constants.js"
 
 export default {

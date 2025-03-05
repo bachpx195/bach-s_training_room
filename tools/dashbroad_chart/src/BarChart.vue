@@ -1,9 +1,16 @@
 <template>
-  <Bar
-    id="my-chart-id"
-    :options="chartOptions"
-    :data="barData"
-  />
+  <div 
+    :style="{
+    // eslint-disable-next-line vue/this-in-template
+    width: this.width+'px',
+    // eslint-disable-next-line vue/this-in-template
+    height: this.height+'px'}" >
+    <Bar
+      id="my-chart-id"
+      :options="chartOptions"
+      :data="barData"
+    />
+  </div>
 </template>
 
 <script>
@@ -19,28 +26,19 @@ export default {
       // eslint-disable-next-line vue/require-default-prop
     barData: {
         type: Object
-    }
+    },
+    // eslint-disable-next-line vue/require-default-prop
+    chartOptions: {
+        type: Object
+    },
+    width: {
+      type: Number,
+      default: 800
+    },
+    height: {
+        type: Number,
+        default: 421
+    },
   },
-  data() {
-    return {
-      chartOptions: {
-        plugins: {
-          title: {
-            display: true,
-            text: 'Chart.js Bar Chart - Stacked'
-          },
-        },
-        responsive: true,
-        scales: {
-          x: {
-            stacked: true,
-          },
-          y: {
-            stacked: true
-          }
-        }
-      }
-    }
-  }
 }
 </script>

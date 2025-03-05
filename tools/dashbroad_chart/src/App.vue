@@ -7,7 +7,18 @@
             @select-merchandise="onSelectMerchandise"
             @select-day-number="onSelectDayNumber" />
         <div class="main-container">
-            <bar-chart v-if="!loading" :bar-data="barData" />
+            <bar-chart
+                v-if="!loading1"
+                :width="width/2"
+                :height="height/2 - 50"
+                :bar-data="effectHourCandlestickTypeInDayData"
+                :chart-options="effectHourCandlestickTypeInDayOptions" />  
+            <bar-chart
+                v-if="!loading2"
+                :width="width/2"
+                :height="height/2 - 50"
+                :bar-data="highestReturnHourInDayData"
+                :chart-options="highestReturnHourInDayOptions" />
         </div>
     </div>
 </template>
@@ -27,11 +38,42 @@ export default {
     },
     data() {
         return {
-            barData: {
+            effectHourCandlestickTypeInDayData: {
                 labels: [],
                 datasets: [],
             },
-            loading: true,
+            effectHourCandlestickTypeInDayOptions: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Tang/Giam theo gio'
+                    },
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true
+                    }
+                }
+            },
+            highestReturnHourInDayData: {
+                labels: [],
+                datasets: [],
+            },
+            highestReturnHourInDayOptions: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Return cao nhat'
+                    }
+                }
+            },
+            loading1: true,
+            loading2: true,
             width: window.innerWidth,
             height: window.innerHeight,
             colors: {
@@ -58,6 +100,7 @@ export default {
     },
     created() {
         this.getEffectHourCandlestickTypeInDay()
+        this.getHighestReturnHourInDay()
     },
     mounted() {
         window.addEventListener('resize', this.onResize)
@@ -73,13 +116,17 @@ export default {
         },
         onSelectMerchandise(merchandiseSelected) {
             this.configSelected.merchandiseId = merchandiseSelected
-            this.loading = true
+            this.loading1 = true
+            this.loading2 = true
             this.getEffectHourCandlestickTypeInDay()
+            this.getHighestReturnHourInDay()
         },
         onSelectDayNumber(dayNumber) {
             this.configSelected.dayNumber = dayNumber
-            this.loading = true
+            this.loading1 = true
+            this.loading2 = true
             this.getEffectHourCandlestickTypeInDay()
+            this.getHighestReturnHourInDay()
         },
         updateMerchandiseRateSelected() {
             this.merchandiseRateSelected.mainId = this.findMerchandiseRateMain.id
@@ -92,12 +139,12 @@ export default {
             this.$store.dispatch('getEffectHourCandlestickTypeInDay', params).then(res => {
                 let increaseDatasets = [];
                 let decreaseDatasets = [];
-                this.barData.labels = _.keys(res.data)
-                _.each(this.barData.labels, function (key) {
+                this.effectHourCandlestickTypeInDayData.labels = _.keys(res.data)
+                _.each(this.effectHourCandlestickTypeInDayData.labels, function (key) {
                     increaseDatasets.push(res.data[key][0])
                     decreaseDatasets.push(res.data[key][1])
                 })
-                this.barData.datasets = [{
+                this.effectHourCandlestickTypeInDayData.datasets = [{
                     label: "Tang",
                     data: increaseDatasets,
                     backgroundColor: 'rgb(75, 192, 192)',
@@ -106,7 +153,27 @@ export default {
                     data: decreaseDatasets,
                     backgroundColor: 'rgb(255, 99, 132)',
                 }]
-                this.loading = false
+                this.loading1 = false
+            })
+        },
+        getHighestReturnHourInDay() {
+            const params = {
+                merchandise_rate_id: this.merchandiseRateSelected.mainId,
+                day_number: this.configSelected.dayNumber
+            }
+            this.$store.dispatch('getHighestReturnHourInDay', params).then(res => {
+                let data = [];
+                this.highestReturnHourInDayData.labels = _.keys(res.data)
+                _.each(this.highestReturnHourInDayData.labels, function (key) {
+                    data.push(res.data[key])
+                })
+                this.highestReturnHourInDayData.datasets = [{
+                    label: "Highest",
+                    data: data,
+                    backgroundColor: 'rgb(75, 192, 192)',
+                }]
+                console.log(this.highestReturnHourInDayData)
+                this.loading2 = false
             })
         }
     }
