@@ -19,3 +19,9 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+.DS_Store
+node_modules
+cdn_status.js
+ww$$$.json
+package-lock.json

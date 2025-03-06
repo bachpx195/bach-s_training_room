@@ -7,7 +7,6 @@
     >
         <div 
             class="config-select"
-            style="width: 10%"
         >
             <select 
                 v-model="configSelected.merchandiseId"
@@ -26,7 +25,6 @@
         </div>
         <div 
             class="config-select"
-            style="width: 10%"
         >
             <select
                 v-model="configSelected.intervalType"
@@ -45,13 +43,11 @@
         </div>
         <div 
             class="config-select"
-            style="width: 10%"
         >
             {{ currentDateFormat }}
         </div>
         <div
             class="config-select-date"
-            style="width: 20%"
         >
             <datepicker
                 placeholder="Select Date"
@@ -70,7 +66,6 @@
         </div>
         <div
             class="config-select-date"
-            style="width: 20%"
         >
             <select
                 v-model="configSelected.event"
@@ -106,7 +101,7 @@
                 </option>
             </select> 
         </div>
-        <div class="config-select" style="width: 10%">
+        <div class="config-select">
             <button 
                 class="next-btn"
                 @click="backChart"
@@ -172,7 +167,7 @@ export default {
     },
     computed: {
         style() {
-            return 'width: ' + this.$props.width + 'px; height: ' + this.$props.height + 'px'
+            return 'width: ' + this.$props.width + 'px;'
         },
         currentDateFormat() {
             return moment(this.currentTime).format("YYYY-MM-DD HH:MM dddd").toString()
@@ -308,10 +303,9 @@ label {
   background-color: #4CAF50; /* Green */
   border: none;
   color: white;
-  padding: 15px 32px;
   text-align: center;
   text-decoration: none;
-  font-size: 16px;
+  height: 24px;
 }
 
 .select-date {

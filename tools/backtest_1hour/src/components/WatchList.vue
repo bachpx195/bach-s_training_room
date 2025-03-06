@@ -82,7 +82,7 @@ export default {
     },
     computed: {
         style() {
-            return 'width: ' + this.$props.width + 'px; height: ' + this.$props.height + 'px'
+            return 'width: ' + this.$props.width + 'px;'
         },
         
     },
@@ -98,12 +98,12 @@ export default {
 </script>
 <style>
 #watch-list {
-    background: black;
-    bottom: 0;
-    right: 0;
-    font-size: 15px;
-    color: red;
-    height: auto;
+  background: black;
+  bottom: 0;
+  right: 0;
+  font-size: 15px;
+  color: red;
+  height: auto;
 }
 .green {
   background: green;
