@@ -22,8 +22,8 @@
             L<span class="t-vue-lspan">{{ ohlcv[2] }}</span>
             C<span class="t-vue-lspan">{{ ohlcv[3] }}</span>
             V<span class="t-vue-lspan">{{ ohlcv[4] }}</span>
-            return_oc<span class="t-vue-lspan">{{ ohlcv[5] }}</span>
-            return_hl<span class="t-vue-lspan">{{ ohlcv[6] }}</span>
+            R_OC<span class="t-vue-lspan">{{ ohlcv[5] }}</span>
+            R_HL<span class="t-vue-lspan">{{ ohlcv[6] }}</span>
         </span>
         <span 
             v-if="!show_values"

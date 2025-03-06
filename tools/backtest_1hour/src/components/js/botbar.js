@@ -2,7 +2,7 @@
 import Const from '../../stuff/constants.js'
 import Utils from '../../stuff/utils.js'
 
-const { MINUTE15, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR, MONTHMAP } = Const
+const { MINUTE15, HOUR, DAY, WEEK, MONTH, YEAR, MONTHMAP } = Const
 
 export default class Botbar {
 
@@ -147,7 +147,8 @@ export default class Botbar {
             var dd = '01'
         }
         if (ti <= WEEK) dd = d.getUTCDate()
-        let date = `${dd} ${mo} ${yr}`
+        let dateName = d.toLocaleString('en-us', { weekday: 'long' })
+        let date = `${dateName} ${dd} ${mo} ${yr}`
         let time = ''
 
         if (ti < DAY) {
