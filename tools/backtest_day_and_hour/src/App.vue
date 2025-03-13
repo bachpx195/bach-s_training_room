@@ -67,7 +67,6 @@
 <script>
 import TradingVue from './TradingVue.vue'
 import ConfigChart from './components/ConfigChart.vue'
-import WatchList from './components/WatchList.vue'
 import DataCube from '../src/helpers/datacube.js'
 import _ from "lodash"
 // import Const from "./stuff/constants.js"
@@ -77,7 +76,7 @@ import LoadingScreen from './components/LoadingScreen.vue'
 export default {
     name: 'app',
     components: {
-        TradingVue, ConfigChart, LoadingScreen, WatchList
+        TradingVue, ConfigChart, LoadingScreen
     },
     data() {
         return {
@@ -85,9 +84,6 @@ export default {
             chartBtc: null,
             chartAltBtc: null,
             loading: true,
-            chartFuture: [],
-            chartBtcFuture: [],
-            chartAltBtcFuture: [],
             datetimeIdMapping: null,
             lastCandlestickInfo: null,
             width: window.innerWidth,
@@ -140,14 +136,18 @@ export default {
     methods: {
         updateChartData(ohlcvData) {
             this.chart.set('chart.data', ohlcvData)
-            // const customData = this.getDrawPoint(ohlcvData)
-            // this.chart.set('onchart.Custom0.data', customData)
+            const customData = this.getDrawPoint(ohlcvData)
+            this.chart.set('onchart.Custom0.data', customData)
         },
         updateBtcChartData(ohlcvData) {
             this.chartBtc.set('chart.data', ohlcvData)
+            const customData = this.getDrawPoint(ohlcvData)
+            this.chartBtc.set('onchart.Custom0.data', customData)
         },
         updateAltBtcChartData(ohlcvData) {
             this.chartAltBtc.set('chart.data', ohlcvData)
+            const customData = this.getDrawPoint(ohlcvData)
+            this.chartAltBtc.set('onchart.Custom0.data', customData)
         },
         onResize() {
             this.width = window.innerWidth
@@ -167,15 +167,15 @@ export default {
 
             this.$store.dispatch('getCandleStickData', params).then(res => {
                 const ohlcv = res.data.ohlcv
-                // const customData = this.getDrawPoint(ohlcv)
+                const customData = this.getDrawPoint(ohlcv)
                 const data = {
                     "ohlcv": ohlcv,
-                    // "onchart": [{
-                    //     name: 'Custom',
-                    //     type: 'Custom',
-                    //     data: customData,
-                    //     settings: {}
-                    // }],
+                    "onchart": [{
+                        name: 'Custom',
+                        type: 'Custom',
+                        data: customData,
+                        settings: {}
+                    }],
                     "tools": [
                         {
                             "type": "Cursor",
@@ -193,7 +193,7 @@ export default {
                     "tool": "Cursor"
                 }
                 this.chart = new DataCube(data)
-                this.chartFuture = res.data.future_ohlcv
+                this.setCurrentTime()
                 this.loading = false
             })
         },
@@ -206,8 +206,16 @@ export default {
 
             this.$store.dispatch('getCandleStickData', params).then(res => {
                 const ohlcv = res.data.ohlcv
+                const customData = this.getDrawPoint(ohlcv)
+                
                 const data = {
                     "ohlcv": ohlcv,
+                    "onchart": [{
+                        name: 'Custom',
+                        type: 'Custom',
+                        data: customData,
+                        settings: {}
+                    }],
                     "tools": [
                         {
                             "type": "Cursor",
@@ -225,7 +233,6 @@ export default {
                     "tool": "Cursor"
                 }
                 this.chartBtc = new DataCube(data)
-                this.chartBtcFuture = res.data.future_ohlcv
             })
         },
         fetchAltBtcChartData(date) {
@@ -237,8 +244,15 @@ export default {
 
             this.$store.dispatch('getCandleStickData', params).then(res => {
                 const ohlcv = res.data.ohlcv
+                const customData = this.getDrawPoint(ohlcv)
                 const data = {
                     "ohlcv": ohlcv,
+                    "onchart": [{
+                        name: 'Custom',
+                        type: 'Custom',
+                        data: customData,
+                        settings: {}
+                    }],
                     "tools": [
                         {
                             "type": "Cursor",
@@ -256,7 +270,6 @@ export default {
                     "tool": "Cursor"
                 }
                 this.chartAltBtc = new DataCube(data)
-                this.chartAltBtcFuture = res.data.future_ohlcv
             })
         },
         fetchEvents() {
@@ -281,6 +294,7 @@ export default {
         },
         onSelectDate(date) {
             const dateParam = moment(date).format()
+            this.currentTime = date.toString()
 
             const params = {
                 merchandise_rate_id: this.merchandiseRateSelected.mainId,
@@ -290,8 +304,8 @@ export default {
 
             this.$store.dispatch('getCandleStickData', params).then(res => {
                 this.updateChartData(res.data.ohlcv)
-                this.chartFuture = res.data.future_ohlcv
             })
+
 
             const paramsBtc = {
                 merchandise_rate_id: 34,
@@ -301,7 +315,6 @@ export default {
 
             this.$store.dispatch('getCandleStickData', paramsBtc).then(res => {
                 this.updateBtcChartData(res.data.ohlcv)
-                this.chartBtcFuture = res.data.future_ohlcv
             })
 
 
@@ -313,7 +326,6 @@ export default {
 
             this.$store.dispatch('getCandleStickData', paramsAltBtc).then(res => {
                 this.updateAltBtcChartData(res.data.ohlcv)
-                this.chartAltBtcFuture = res.data.future_ohlcv
             })
 
             // this.fetchChartDataByMerchandiseRate(dateParam)
@@ -321,61 +333,20 @@ export default {
         updateMerchandiseRateSelected() {
             this.merchandiseRateSelected.mainId = this.findMerchandiseRateMain.id
         },
-        asyncCandlestickData() {
-            this.isLoading = true
-            const params = {
-                merchandise_rate_ids: [this.merchandiseRateSelected.mainId],
-                time_type: this.configSelected.intervalType
-            }
-            this.$store.dispatch('asyncCandlestickData', params).then(res => {
-                this.fetchChartData()
-                this.isLoading = false
-                alert(res.data.lastest_time)
-            })
-        },
-        nextChart() {
-            this.setNextChartDate()
+        nextChart() {            
+            this.onSelectDate(moment(this.currentTime).add(1, 'days'))
+            // this.setNextChartDate()
         },
         backChart() {
-            this.setBackChartDate()
-        },
-        setNextChartDate() {
-            if(this.chartFuture.length == 0) return
-            this.chart.data.chart.data.push(this.chartFuture.shift())
-            this.updateChartData(this.chart.data.chart.data)
-            this.setNextBtcDate()
-            this.setNextAltBtcDate()
-        },
-        setNextBtcDate() {
-            if(this.chartBtcFuture.length == 0) return
-            this.chartBtc.data.chart.data.push(this.chartBtcFuture.shift())
-            this.updateBtcChartData(this.chartBtc.data.chart.data)
-        },
-        setNextAltBtcDate() {
-            if(this.chartAltBtcFuture.length == 0) return
-            this.chartAltBtc.data.chart.data.push(this.chartAltBtcFuture.shift())
-            this.updateAltBtcChartData(this.chartAltBtc.data.chart.data)
-        },
-        setBackChartDate() {
-            this.chartFuture.unshift(this.chart.data.chart.data.pop())
-            this.updateChartData(this.chart.data.chart.data)
-            this.setBackBtcDate()
-            this.setBackAltBtcDate()
-        },
-        setBackBtcDate() {
-            this.chartBtcFuture.unshift(this.chartBtc.data.chart.data.pop())
-            this.updateBtcChartData(this.chartBtc.data.chart.data)
-        },
-        setBackAltBtcDate() {
-            this.chartAltBtcFuture.unshift(this.chartAltBtc.data.chart.data.pop())
-            this.updateAltBtcChartData(this.chartAltBtc.data.chart.data)
+            // this.setBackChartDate()
+             this.onSelectDate(moment(this.currentTime).subtract(1, 'days'))
         },
         setCurrentTime() {
             let lastDate = null
             if(this.chart.data.ohlcv) {
-                lastDate = this.getLastTimestamp(this.chart.data.ohlcv)
+                lastDate = this.getLastTimestamp(this.chart.data.ohlcv) - (23*60*60*1000)
             } else {
-                lastDate = this.getLastTimestamp(this.chart.data.chart.data)
+                lastDate = this.getLastTimestamp(this.chart.data.chart.data) - (23*60*60*1000)
             }
             let currentDate = new Date(lastDate)
             this.currentTime = currentDate.toString()
@@ -395,48 +366,34 @@ export default {
             })
         },
         getDrawPoint(data){
-            const lastTimestamp = this.getLastTimestamp(data)
-            const currentDate = new Date(lastTimestamp)
-            const weekDiff = currentDate.getDay()
-            let firstTimestamp;
-            if(weekDiff == 0) {
-                firstTimestamp = lastTimestamp - (24*60*60*1000)*6
-            }else {
-                firstTimestamp = lastTimestamp - (24*60*60*1000)*(weekDiff-1)
-            }
+            const lastHourOfDayTimestamp = this.getLastTimestamp(data)
+            const firstHourOfDayTimestamp = lastHourOfDayTimestamp - (23*60*60*1000);
+            const yesterdayTimestamp = firstHourOfDayTimestamp - (60*60*1000);
             
-            
-            const firstLastWeekTimestamp = firstTimestamp - (24*60*60*1000)*7
 
-
-            const dayData = _.filter(data, function (n) {
-                return  n[0] >= firstTimestamp & n[0] <= lastTimestamp
+            const hourData = _.filter(data, function (n) {
+                return  n[0] >= firstHourOfDayTimestamp & n[0] <= lastHourOfDayTimestamp
             });
 
-            const openCandlestick = _.find(data, function (n) {
-                return  n[0] == firstTimestamp
+            const yesterdayData = _.find(data, function (n) {
+                return  n[0] == yesterdayTimestamp
             });
 
-            const yesterdayData = _.filter(data, function (n) {
-                return  n[0] >= firstLastWeekTimestamp & n[0] < firstTimestamp
-            });
-
-            const yesterdayHigh = _.max(_.map(yesterdayData, function(x) {return x[2]}))
-            const yesterdayLow = _.min(_.map(yesterdayData, function(x) {return x[3]}))
+            console.log("yesterdayData", yesterdayData)
 
             return [
                 // day zone
-                [firstTimestamp, _.max(_.map(dayData, function(x) {return x[2]}))],
-                [lastTimestamp, _.min(_.map(dayData, function(x) {return x[3]}))],
+                [firstHourOfDayTimestamp, _.max(_.map(hourData, function(x) {return x[2]}))],
+                [lastHourOfDayTimestamp, _.min(_.map(hourData, function(x) {return x[3]}))],
                 // open line
-                [firstLastWeekTimestamp, openCandlestick[1]],
-                [lastTimestamp, openCandlestick[1]],
+                [yesterdayTimestamp, yesterdayData[4]],
+                [lastHourOfDayTimestamp, yesterdayData[4]],
                 // high line
-                [firstLastWeekTimestamp, yesterdayHigh],
-                [lastTimestamp, yesterdayHigh],
+                [yesterdayTimestamp, yesterdayData[2]],
+                [lastHourOfDayTimestamp, yesterdayData[2]],
                 // low line
-                [firstLastWeekTimestamp, yesterdayLow],
-                [lastTimestamp, yesterdayLow]
+                [yesterdayTimestamp, yesterdayData[3]],
+                [lastHourOfDayTimestamp, yesterdayData[3]]
             ]
         }
     }

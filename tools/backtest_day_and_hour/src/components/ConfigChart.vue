@@ -162,7 +162,7 @@ export default {
             return 'width: ' + this.$props.width + 'px;'
         },
         currentDateFormat() {
-            return moment(this.currentTime).format("YYYY-MM-DD HH:MM dddd").toString()
+            return moment(this.currentTime).format("YYYY-MM-DD dddd").toString()
         },
         listDate() {
             return dateConst.PULLBACK_DATES

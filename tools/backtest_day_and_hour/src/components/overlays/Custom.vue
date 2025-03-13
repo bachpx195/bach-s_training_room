@@ -83,9 +83,6 @@ export default {
             let y2 = layout.$2screen(p2[1])
             ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
 
-            let w = layout.width
-            let s = Math.sign(x2 - x1 || y2 - y1)
-            let dx = w * s /10
             // Open line
             let openLineX1 = layout.t2screen(openLinePoint1[0])
             let openLineY1 = layout.$2screen(openLinePoint1[1])
@@ -94,7 +91,7 @@ export default {
 
             ctx.beginPath()
             ctx.moveTo(openLineX1, openLineY1)
-            ctx.lineTo(openLineX2 + dx, openLineY2)
+            ctx.lineTo(openLineX2, openLineY2)
             ctx.strokeStyle = "#FFFF00"
             ctx.stroke();
 
@@ -106,7 +103,7 @@ export default {
 
             ctx.beginPath()
             ctx.moveTo(highLineX1, highLineY1)
-            ctx.lineTo(highLineX2 + dx, highLineY2)
+            ctx.lineTo(highLineX2, highLineY2)
             ctx.strokeStyle = "#42b28a"
             ctx.stroke();
 
@@ -118,7 +115,7 @@ export default {
 
             ctx.beginPath()
             ctx.moveTo(lowLineX1, lowLineY1)
-            ctx.lineTo(lowLineX2 + dx, lowLineY2)
+            ctx.lineTo(lowLineX2, lowLineY2)
             ctx.strokeStyle = "#ff2316"
             ctx.stroke();
         },
