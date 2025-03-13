@@ -1,0 +1,59 @@
+{
+    "ohlcv": [
+        [
+            1558674000000,
+            7851.90785123,
+            7852,
+            7784.5,
+            7839.8,
+            149.90354104
+        ],
+        [
+            1558677600000,
+            7839.8,
+            7886,
+            7830,
+            7879.5,
+            84.58073338
+        ],
+        [
+            1558681200000,
+            7886.1,
+            7912,
+            7872,
+            7886.5,
+            338.34712643
+        ],
+        [
+            1558684800000,
+            7886.5,
+            8020,
+            7886.4,
+            7967.7,
+            571.78630615
+        ],
+        [
+            1558688400000,
+            7968.22730706,
+            7999,
+            7937,
+            7968.2,
+            173.28647568
+        ]
+    ],
+    "tools": [
+        {
+            "type": "Cursor",
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAgMAAAC5h23wAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAxQTFRFAAAATU1NTU1NTU1NwlMHHwAAAAR0Uk5TAOvhxbpPrUkAAAAkSURBVHicY2BgYHBggAByabxg1WoGBq2pRCk9AKUbcND43AEAufYHlSuusE4AAAAASUVORK5CYII="
+        },
+        {
+            "type": "LineToolSegment",
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAgMAAAC5h23wAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAlQTFRFAAAATU1NJCQkCxcHIQAAAAN0Uk5TAP8SmutI5AAAACxJREFUeJxjYMACGAMgNAsLdpoVKi8AVe8A1QblQlWRKt0AoULw2w1zGxoAABdiAviQhF/mAAAAAElFTkSuQmCC"
+        },
+        {
+            "type": "LineToolExtended",
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAQMAAAD+JxcgAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAATU1NkJ+rOQAAAAJ0Uk5TAP9bkSK1AAAANElEQVR4nGNggABGEMEEIlhABAeI+AASF0AlHmAqA4kzKAAx8wGQuAMKwd6AoYzBAWonAwAcLwTgNfJ3RQAAAABJRU5ErkJggg=="
+        }
+    ],
+    "tool": "Cursor"
+}
