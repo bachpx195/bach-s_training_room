@@ -1,53 +1,10 @@
 <template>
 <div v-if="!loading">
     <div>
-        <div>
-            <trading-vue
-            v-if="chartBtc"
-            title-txt="BTCUSDT"
-            id="btc-trading-vue"
-            :data="chartBtc"
-            :width="width/2"
-            :height="height/2"
-            :toolbar="false"
-            :timezone="7"
-            :color-back="colors.colorBack"
-            :color-grid="colors.colorGrid"
-            :color-text="colors.colorText"
-            :chart-config=" { DEFAULT_LEN: 100 } "/>
-        </div>
-        <div>
-            <trading-vue
-            v-if="chartAltBtc"
-            :title-txt="findMerchandiseRateAltBtc.slug"
-            id="alt-btc-trading-vue"
-            :data="chartAltBtc"
-            :width="width/2"
-            :height="height/2"
-            :toolbar="false"
-            :timezone="7"
-            :color-back="colors.colorBack"
-            :color-grid="colors.colorGrid"
-            :color-text="colors.colorText"
-            :chart-config=" { DEFAULT_LEN: 100 } "/>
-        </div>
-        <div>
-            <trading-vue
-            :title-txt="findMerchandiseRateMain.slug"
-            id="main-trading-vue"
-            :data="chart"
-            :width="width/2"
-            :height="height/2"
-            :toolbar="true"
-            :timezone="7"
-            :color-back="colors.colorBack"
-            :color-grid="colors.colorGrid"
-            :color-text="colors.colorText"
-            :chart-config=" { DEFAULT_LEN: 100 } "/>
-        </div>
         <div class="config-container" :style="configStyle">
             <config-chart
-                :width="width/2"
+                :width="width"
+                height="50"
                 :selected="configSelected"
                 :current-time="currentTime"
                 :list-event="listEvent"
@@ -56,6 +13,35 @@
                 @select-date="onSelectDate"
                 @next-chart="nextChart"
                 @back-chart="backChart" />  
+        </div>
+        <div>
+            <trading-vue
+            :title-txt="findMerchandiseRateMain.slug"
+            id="main-trading-vue"
+            :data="chart"
+            :width="width/2"
+            :height="height - 50"
+            :toolbar="true"
+            :timezone="7"
+            :color-back="colors.colorBack"
+            :color-grid="colors.colorGrid"
+            :color-text="colors.colorText"
+            :chart-config=" { DEFAULT_LEN: 100 } "/>
+        </div>
+        <div>
+            <trading-vue
+            v-if="chartBtc"
+            title-txt="BTCUSDT"
+            id="btc-trading-vue"
+            :data="chartBtc"
+            :width="width/2"
+            :height="height - 50"
+            :toolbar="false"
+            :timezone="7"
+            :color-back="colors.colorBack"
+            :color-grid="colors.colorGrid"
+            :color-text="colors.colorText"
+            :chart-config=" { DEFAULT_LEN: 100 } "/>
         </div>
     </div>
 </div>
@@ -119,7 +105,7 @@ export default {
             return moment(this.currentTime).format("YYYY-MM-DD HH:MM dddd").toString()
         },
         configStyle() {
-            return 'width: ' + this.width/2 + 'px; height: ' + this.height/2 + 'px'
+            return 'width: ' + this.width + 'px; height: 50px'
         },
     },
     created() {
@@ -328,6 +314,8 @@ export default {
                 this.updateAltBtcChartData(res.data.ohlcv)
             })
 
+            this.onResize()
+
             // this.fetchChartDataByMerchandiseRate(dateParam)
         },
         updateMerchandiseRateSelected() {
@@ -414,7 +402,7 @@ body {
     float: left;
 }
 .main-container {
-    display: flex;
+    display: block;
 }
 .config-container {
     float: left;

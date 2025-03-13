@@ -159,7 +159,7 @@ export default {
     },
     computed: {
         style() {
-            return 'width: ' + this.$props.width + 'px;'
+            return 'width: ' + this.$props.width + 'px; height: 50px'
         },
         currentDateFormat() {
             return moment(this.currentTime).format("YYYY-MM-DD dddd").toString()
@@ -257,7 +257,7 @@ export default {
     right: 0;
     font-size: 20px;
     color: red;
-    height: auto;
+    height: 50px;
 }
 .config-title {
     text-align: center;
