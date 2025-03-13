@@ -4,7 +4,6 @@
         <div class="config-container" :style="configStyle">
             <config-chart
                 :width="width"
-                height="50"
                 :selected="configSelected"
                 :current-time="currentTime"
                 :list-event="listEvent"
@@ -68,7 +67,6 @@ export default {
         return {
             chart: null,
             chartBtc: null,
-            chartAltBtc: null,
             loading: true,
             datetimeIdMapping: null,
             lastCandlestickInfo: null,
@@ -121,19 +119,18 @@ export default {
     },
     methods: {
         updateChartData(ohlcvData) {
+            this.chart.set('chart.data', [])
+
             this.chart.set('chart.data', ohlcvData)
             const customData = this.getDrawPoint(ohlcvData)
             this.chart.set('onchart.Custom0.data', customData)
         },
         updateBtcChartData(ohlcvData) {
+            this.chartBtc.set('chart.data', [])
             this.chartBtc.set('chart.data', ohlcvData)
             const customData = this.getDrawPoint(ohlcvData)
             this.chartBtc.set('onchart.Custom0.data', customData)
-        },
-        updateAltBtcChartData(ohlcvData) {
-            this.chartAltBtc.set('chart.data', ohlcvData)
-            const customData = this.getDrawPoint(ohlcvData)
-            this.chartAltBtc.set('onchart.Custom0.data', customData)
+            
         },
         onResize() {
             this.width = window.innerWidth
@@ -142,7 +139,6 @@ export default {
         fetchChartData(date) {
             this.fetchChartDataByMerchandiseRate(date)
             this.fetchBtcChartData(date)
-            this.fetchAltBtcChartData(date)
         },
         fetchChartDataByMerchandiseRate(date) {
             const params = {
@@ -221,43 +217,6 @@ export default {
                 this.chartBtc = new DataCube(data)
             })
         },
-        fetchAltBtcChartData(date) {
-            const params = {
-                merchandise_rate_id: this.findMerchandiseRateAltBtc.id,
-                time_type: this.configSelected.intervalType,
-                date: date
-            }
-
-            this.$store.dispatch('getCandleStickData', params).then(res => {
-                const ohlcv = res.data.ohlcv
-                const customData = this.getDrawPoint(ohlcv)
-                const data = {
-                    "ohlcv": ohlcv,
-                    "onchart": [{
-                        name: 'Custom',
-                        type: 'Custom',
-                        data: customData,
-                        settings: {}
-                    }],
-                    "tools": [
-                        {
-                            "type": "Cursor",
-                            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAgMAAAC5h23wAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAxQTFRFAAAATU1NTU1NTU1NwlMHHwAAAAR0Uk5TAOvhxbpPrUkAAAAkSURBVHicY2BgYHBggAByabxg1WoGBq2pRCk9AKUbcND43AEAufYHlSuusE4AAAAASUVORK5CYII="
-                        },
-                        {
-                            "type": "LineToolSegment",
-                            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAgMAAAC5h23wAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAlQTFRFAAAATU1NJCQkCxcHIQAAAAN0Uk5TAP8SmutI5AAAACxJREFUeJxjYMACGAMgNAsLdpoVKi8AVe8A1QblQlWRKt0AoULw2w1zGxoAABdiAviQhF/mAAAAAElFTkSuQmCC"
-                        },
-                        {
-                            "type": "LineToolExtended",
-                            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZAQMAAAD+JxcgAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAATU1NkJ+rOQAAAAJ0Uk5TAP9bkSK1AAAANElEQVR4nGNggABGEMEEIlhABAeI+AASF0AlHmAqA4kzKAAx8wGQuAMKwd6AoYzBAWonAwAcLwTgNfJ3RQAAAABJRU5ErkJggg=="
-                        }
-                    ],
-                    "tool": "Cursor"
-                }
-                this.chartAltBtc = new DataCube(data)
-            })
-        },
         fetchEvents() {
             const params = {
                 merchandise_rate_id: this.merchandiseRateSelected.mainId
@@ -303,17 +262,6 @@ export default {
                 this.updateBtcChartData(res.data.ohlcv)
             })
 
-
-            const paramsAltBtc = {
-                merchandise_rate_id: this.findMerchandiseRateAltBtc.id,
-                time_type: this.configSelected.intervalType,
-                date: dateParam
-            }
-
-            this.$store.dispatch('getCandleStickData', paramsAltBtc).then(res => {
-                this.updateAltBtcChartData(res.data.ohlcv)
-            })
-
             this.onResize()
 
             // this.fetchChartDataByMerchandiseRate(dateParam)
@@ -321,13 +269,17 @@ export default {
         updateMerchandiseRateSelected() {
             this.merchandiseRateSelected.mainId = this.findMerchandiseRateMain.id
         },
-        nextChart() {            
-            this.onSelectDate(moment(this.currentTime).add(1, 'days'))
+        nextChart() {           
+            let date = new Date(this.currentTime);
+            date.setDate(date.getDate() - 1);
+            this.onSelectDate(date)
             // this.setNextChartDate()
         },
         backChart() {
             // this.setBackChartDate()
-             this.onSelectDate(moment(this.currentTime).subtract(1, 'days'))
+            let date = new Date(this.currentTime);
+            date.setDate(date.getDate() + 1);
+            this.onSelectDate(date)
         },
         setCurrentTime() {
             let lastDate = null
@@ -366,8 +318,6 @@ export default {
             const yesterdayData = _.find(data, function (n) {
                 return  n[0] == yesterdayTimestamp
             });
-
-            console.log("yesterdayData", yesterdayData)
 
             return [
                 // day zone

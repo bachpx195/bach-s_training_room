@@ -184,7 +184,9 @@ export default {
                     this.backSeletedDate()
                 }
                 if(e.key === 'Enter') {
+                   
                     let dateTime = new Date(this.currentTime)
+                    console.log("dateTime", dateTime)
                     this.changeDate(dateTime)
                 }
                 e.preventDefault();
@@ -199,6 +201,7 @@ export default {
             this.$emit('select-interval', this.configSelected.intervalType)
         },
         changeDate(e) {
+            console.log("changeDate", e)
             this.$emit('select-date', e)
         },
         asyncUpdateData() {
@@ -234,7 +237,6 @@ export default {
                     this.$emit('select-date', dateTime)
                 }
             }
-            
         },
         backSeletedDate() {
             if (this.configSelected.event && this.date && this.listEventDay) {

@@ -223,7 +223,6 @@ export default {
             }
 
             this.parse_colors(chart_props.colors)
-            console.log("chart_props", chart_props)
             return chart_props
         },
         chart_config() {
@@ -327,7 +326,6 @@ export default {
             })
         },
         custom_event(d) {
-            console.log("hihi", d)
             if ('args' in d) {
                 this.$emit(d.event, ...d.args)
             } else {
