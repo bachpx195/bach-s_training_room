@@ -83,6 +83,10 @@ export default {
             let y2 = layout.$2screen(p2[1])
             ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
 
+            ctx.font = "12px Arial";
+            ctx.fillStyle = "white";
+            ctx.fillText(((p1[1] - p2[1])*100/p2[1]).toFixed(2) + "%",x2,y1);
+
             // Open line
             let openLineX1 = layout.t2screen(openLinePoint1[0])
             let openLineY1 = layout.$2screen(openLinePoint1[1])
