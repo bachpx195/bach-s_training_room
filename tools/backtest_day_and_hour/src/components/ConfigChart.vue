@@ -74,7 +74,7 @@
                 <option 
                     v-for="(value, key) in listEvent"
                     :key="key"
-                    :value="value[0]"
+                    :value="`${value[0]}-${value[3]}`"
                 >
                     {{ `${value[1]} - ${value[2]}` }}
                 </option>
@@ -115,6 +115,7 @@
 
 import Datepicker from "vuejs-datepicker/dist/vuejs-datepicker.esm.js";
 import moment from 'moment'
+import _ from "lodash"
 import dateConst from "../stuff/list_date_constants.js"
 
 export default {
@@ -201,7 +202,6 @@ export default {
             this.$emit('select-interval', this.configSelected.intervalType)
         },
         changeDate(e) {
-            console.log("changeDate", e)
             this.$emit('select-date', e)
         },
         asyncUpdateData() {
@@ -218,15 +218,27 @@ export default {
             this.$emit('select-date', dateTime)
         },
         changeEvent() {
-            const params = {
-                merchandise_rate_id: 35,
-                time_type: this.configSelected.intervalType,
-                event_id: this.configSelected.event
-            }
+            const eventArr = _.split(this.configSelected.event, '-')
+            if (eventArr[1] == 'pattern') {
+                const params = {
+                    merchandise_rate_id: 35,
+                    pattern_id: eventArr[0]
+                }
 
-            this.$store.dispatch('getListDay', params).then(res => {
-                this.listEventDay = res.data                
-            })
+                this.$store.dispatch('getListPatternDay', params).then(res => {
+                    this.listEventDay = res.data                
+                })
+            } else {
+                const params = {
+                    merchandise_rate_id: 35,
+                    time_type: this.configSelected.intervalType,
+                    event_id: eventArr[0]
+                }
+
+                this.$store.dispatch('getListDay', params).then(res => {
+                    this.listEventDay = res.data                
+                })
+            }
         },
         nextSeletedDate() {
             if (this.configSelected.event && this.date && this.listEventDay) {

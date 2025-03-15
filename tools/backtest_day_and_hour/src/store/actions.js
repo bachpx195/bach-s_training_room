@@ -94,6 +94,11 @@ export function getListDay(context, payload) {
   return apiGet(context, `${endpoint}?event_id=${payload.event_id}&interval=${payload.time_type}&merchandise_rate_id=${payload.merchandise_rate_id}`)
 }
 
+export function getListPatternDay(context, payload) {
+  const endpoint = 'patterns'
+  return apiGet(context, `${endpoint}?pattern_id=${payload.pattern_id}&merchandise_rate_id=${payload.merchandise_rate_id}`)
+}
+
 export function getEvent(context, payload) {
   const endpoint = 'event_dates/list_event'
   return apiGet(context, `${endpoint}?merchandise_rate_id=${payload.merchandise_rate_id}`)
